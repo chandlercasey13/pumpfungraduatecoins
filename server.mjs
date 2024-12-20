@@ -24,7 +24,11 @@ app.prepare().then(() => {
    .then((data) => {
      console.log('GET request data:', data);
 
-     const filteredData = data.filter(item => item.chainId === 'solana');
+     const filteredData = data.filter((item) => {
+      // Check if the chainId is 'solana' and tokenAddress ends with 'pump'
+      return item.chainId === 'solana' && item.tokenAddress && item.tokenAddress.endsWith('pump');
+    });
+   
 
      console.log(filteredData)
      
