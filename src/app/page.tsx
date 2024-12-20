@@ -38,7 +38,16 @@ export default function Home() {
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
     socket.on("data", (value: Coin[]) => {
-      setCoins(value); // Set the received coins data
+      // Compare the new data with the current state and update only if there's a difference
+      setCoins((prevCoins) => {
+        // Filter out coins that are already present in the state
+        const newCoins = value.filter((newCoin) => {
+          return !prevCoins.some((existingCoin) => existingCoin.tokenAddress === newCoin.tokenAddress);
+        });
+
+        // Return the updated state with new coins added
+        return [...prevCoins, ...newCoins];
+      });
     });
 
     return () => {
@@ -50,14 +59,13 @@ export default function Home() {
     };
   }, []);
 
-  console.log(isConnected);
-  console.log(transport);
+
 
   return (
     <main className="min-h-screen w-screen flex flex-col justify-center items-center bg-black overflow-auto">
       <h1 className="font-bold text-5xl pb-10 text-white">PumpFun Graduates</h1>
       <div className="h-full w-full md:max-h-[50rem] md:max-w-[70rem] border-[1px] border-color-white rounded-md">
-        <ul className="h-full">
+        <ul className="h-full flex flex-col">
           {coins.length === 0 ? (
             <li>Loading...</li>
           ) : (
