@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { socket } from "../socket";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 // Define the structure of each coin item, assuming it has a chainId and other properties
 interface Coin {
   chainId: number;
@@ -52,17 +54,21 @@ export default function Home() {
   console.log(transport);
 
   return (
-    <main className="h-screen w-screen flex flex-col justify-center items-center">
-      <h1 className="font-bold text-5xl pb-10">PumpFun Graduates</h1>
+    <main className="min-h-screen w-screen flex flex-col justify-center items-center bg-black overflow-auto">
+      <h1 className="font-bold text-5xl pb-10 text-white">PumpFun Graduates</h1>
       <div className="h-full w-full md:max-h-[50rem] md:max-w-[70rem] border-[1px] border-color-white rounded-md">
-        <ul>
+        <ul className="h-full">
           {coins.length === 0 ? (
             <li>Loading...</li>
           ) : (
             coins.map((item, index) => (
-              <li key={index} className="w-full h-20 overflow-y-auto flex ">
-                <div className="w-20 pl-4">{item.icon}</div>
-                <div></div>
+              <li key={index} className="w-full h-20 overflow-y-auto flex border-b-2 gap-6  ">
+                <div className="w-20 pl-4 flex justify-center items-center">
+                <Avatar>
+  <AvatarImage src={item.icon} />
+  <AvatarFallback>CN</AvatarFallback>
+</Avatar></div>
+                <div className=" flex items-center text-white"> {item.tokenAddress}</div>
                 
                
                 <div></div>  {/* Display other item details */}
