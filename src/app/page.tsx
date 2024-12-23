@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { socket } from "../socket";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-// Define the structure of each coin item, assuming it has a chainId and other properties
+// Define the structure of each coin item
 interface Coin {
   chainId: number;
+  tokenAddress: string;
   [key: string]: any; // Allow additional properties if necessary
 }
 
@@ -37,49 +38,57 @@ export default function Home() {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on("data", (value: Coin[]) => {
-      // Compare the new data with the current state and update only if there's a difference
+    socket.on("data", (newMint: Coin) => {
+      // Update state with the new mint if it doesn't already exist
       setCoins((prevCoins) => {
-        // Filter out coins that are already present in the state
-        const newCoins = value.filter((newCoin) => {
-          return !prevCoins.some((existingCoin) => existingCoin.tokenAddress === newCoin.tokenAddress);
-        });
-
-        // Return the updated state with new coins added
-        return [...prevCoins, ...newCoins];
+        const exists = prevCoins.some((coin) => coin.tokenAddress === newMint.tokenAddress);
+        if (!exists) {
+          return [...prevCoins, newMint];
+        }
+        return prevCoins;
       });
     });
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("data", (value: Coin[]) => {
-        setCoins(value); 
-      });
+      socket.off("data");
     };
   }, []);
 
+  const handleSell = () => {
+    socket.emit("sell", "work");
+    console.log("Sell event emitted:");
+  };
 
+  console.log(`${process.env.PUMPFUN_KEY}`);
 
   return (
     <main className="min-h-screen w-screen flex flex-col justify-center items-center bg-black overflow-auto">
       <h1 className="font-bold text-5xl pb-10 text-white">PumpFun Graduates</h1>
       <div className="h-full w-full md:max-h-[50rem] md:max-w-[70rem] border-[1px] border-color-white rounded-md">
+        <button className="h-20 w-20 bg-white" onClick={handleSell}>
+          Sell
+        </button>
+
         <ul className="h-full flex flex-col">
           {coins.length === 0 ? (
-            <li>Loading...</li>
+            <li className="text-white">Loading...</li>
           ) : (
             coins.map((item, index) => (
-              <li key={index} className="w-full h-20 overflow-y-auto flex border-b-2 gap-6  ">
+              <li
+                key={index}
+                className="w-full h-20 overflow-y-auto flex border-b-2 gap-6"
+              >
                 <div className="w-20 pl-4 flex justify-center items-center">
-                <Avatar>
-  <AvatarImage src={item.icon} />
-  <AvatarFallback>CN</AvatarFallback>
-</Avatar></div>
-                <div className=" flex items-center text-white"> {item.tokenAddress}</div>
-                
-               
-                <div></div>  {/* Display other item details */}
+                  <Avatar>
+                    <AvatarImage src={item.icon} />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="flex items-center text-white">
+                  {item.tokenAddress}
+                </div>
               </li>
             ))
           )}
