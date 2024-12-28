@@ -28,12 +28,38 @@ const connection = new Connection(SOLANA_HTTP_URL, {
   commitment: "processed",
 });
 
+const sendCachedCoins = (socket) => {
+  if (coinCache.size > 0) {
+    console.log(coinCache.size);
+    for (const coinMint of coinCache.keys()) {
+      const cachedCoin = coinCache.get(coinMint);
+      if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply) {
+        socket.emit("holdings", {
+          coinMint: cachedCoin.coinMint,
+          devHoldings: cachedCoin.ownerHoldings,
+          bundleSupply: cachedCoin.bundleSupply,
+        });
+
+        console.log(cachedCoin.ownerHoldings);
+        console.log(cachedCoin.bundleSupply);
+        console.log(cachedCoin.coinMint);
+      }
+    }
+  } else {
+    console.log("CoinCache is empty, nothing to emit.");
+  }
+};
+
 app.prepare().then(() => {
   const httpServer = createServer(handler);
   const io = new Server(httpServer);
 
   io.on("connection", (socket) => {
     console.log("Socket connected");
+
+    setTimeout(() => {
+      sendCachedCoins(socket);
+    }, 2000);
 
     const solanaWs = new WebSocket(SOLANA_WS_URL);
 
@@ -90,14 +116,10 @@ const aboutToGraduateCoins = async (socket, solSocket) => {
     }
 
     const data = await response.json();
-    const limitedData = data.slice(0, 20);
 
-    //console.log(limitedData[2].coinMint)
-    //console.log(limitedData[2].holders)
-    socket.emit("data", limitedData);
-    await cacheCoins(limitedData, socket, solSocket);
+    socket.emit("data", data);
 
-    //console.log("Fetched coins:", data);
+    await cacheCoins(data, socket, solSocket);
   } catch (error) {
     console.error("Error fetching coins:", error);
   }
@@ -120,7 +142,6 @@ const findOwnerHoldings = async (coinDev, coinMint) => {
 
     const data = await response.json();
 
-    y;
     if (Array.isArray(data)) {
       const matchingItem = data.find((item) => item.mint === coinMint);
       if (matchingItem) {
@@ -137,7 +158,34 @@ const findOwnerHoldings = async (coinDev, coinMint) => {
   }
 };
 
+const findBundleHoldings = async (coinMint) => {
+  const url = `https://trench.bot/api/bundle_advanced/${coinMint}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.total_percentage_bundled) {
+      return data.total_percentage_bundled;
+    } else {
+      console.log(`No bundled supply for ${coinMint}.`);
+    }
+  } catch (err) {
+    console.error("Error in findOwnerHoldings:", err);
+  }
+};
+
 let coinCache = new Map();
+const inProgress = new Set();
 
 const cacheCoins = async (data, socket, solSocket) => {
   if (!Array.isArray(data)) {
@@ -146,22 +194,53 @@ const cacheCoins = async (data, socket, solSocket) => {
   }
 
   for (const coin of data) {
-    if (coin && coin.coinMint && !coinCache.has(coin.coinMint)) {
-      // Check if mint exists AND is NOT already in the cache
+    if (
+      coin &&
+      coin.coinMint &&
+      !coinCache.has(coin.coinMint) &&
+      !inProgress.has(coin.coinMint)
+    ) {
+      inProgress.add(coin.coinMint);
+      // console.log(coin)
 
-      const ownerHoldings = await findOwnerHoldings(coin.dev, coin.coinMint);
-      socket.emit("holdings", {
-        coinMint: coin.coinMint,
-        devHoldings: ownerHoldings,
-      });
-      //  const tweetsForCoin = await getXPostCount(coin.coinMint)
-      // coin.posts = tweetsForCoin;
+      (async () => {
+        try {
+          const bundleSupply = await findBundleHoldings(coin.coinMint);
+          const ownerHoldings = await findOwnerHoldings(
+            coin.dev,
+            coin.coinMint
+          );
 
-      coinCache.set(coin.coinMint, coin);
-    } else if (coin && coin.coinMint) {
-      //console.log(coin ,"already in cache")
-    } else {
-      console.warn("cacheCoins: Object missing 'mint' property:", coin);
+          coin.bundleSupply = bundleSupply;
+          coin.ownerHoldings = ownerHoldings;
+
+          coinCache.set(coin.coinMint, coin);
+
+          socket.emit("holdings", {
+            coinMint: coin.coinMint,
+            devHoldings: ownerHoldings,
+            bundleSupply: bundleSupply,
+          });
+
+          // console.log(`Processed and cached ${coin.coinMint}`);
+        } catch (error) {
+          console.error(`Error processing coin ${coin.coinMint}:`, error);
+        } finally {
+          inProgress.delete(coin.coinMint); // Remove from in-progress
+        }
+      })();
+    } else if (coin && coin.coinMint && coinCache.has(coin.coinMint)) {
+      const cachedCoin = coinCache.get(coin.coinMint);
+
+      if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply) {
+        socket.emit("holdings", {
+          coinMint: cachedCoin.coinMint,
+          devHoldings: cachedCoin.ownerHoldings,
+          bundleSupply: cachedCoin.bundleSupply,
+        });
+
+        console.log(`Emitted cached data for ${cachedCoin.coinMint}`);
+      }
     }
   }
 };
