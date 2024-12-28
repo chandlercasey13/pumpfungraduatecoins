@@ -30,7 +30,7 @@ const connection = new Connection(SOLANA_HTTP_URL, {
 
 const sendCachedCoins = (socket) => {
   if (coinCache.size > 0) {
-    console.log(coinCache.size);
+    
     for (const coinMint of coinCache.keys()) {
       const cachedCoin = coinCache.get(coinMint);
       if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply || cachedCoin.tenHolderSupply) {

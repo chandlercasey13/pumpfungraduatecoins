@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { socket } from "../socket";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import PreviousMap from "postcss/lib/previous-map";
-
+import Spinner from "../components/Spinner"
 interface Coin {
   chainId: number;
   tokenAddress: string;
@@ -70,17 +70,18 @@ export default function Home() {
       
       setCoinDevHoldings((prevMap) => {
         const newMap = new Map(prevMap);
-        newMap.set(holdings.coinMint, [holdings.devHoldings, holdings.bundleSupply, holdings.tenHolderSupply]);
+        newMap.set(holdings.coinMint, [{"devHoldings" : holdings.devHoldings},{"bundlePercentHeld": holdings.bundleSupply},{"topTenPercentHeld" : holdings.tenHolderSupply}]);
         return newMap;
       });
-      
+     console.log(holdings)
     });
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("data");
-      socket.off("holdings", onDisconnect)
+      socket.off("holdings");
+      socket.disconnect();
     };
   }, []);
 
@@ -159,22 +160,33 @@ export default function Home() {
                  
                     {coinDevHoldings.has(item.coinMint)
                       ? `${(
-                          (coinDevHoldings.get(item.coinMint)[0] / 1e9) *
+                          (coinDevHoldings.get(item.coinMint)[0].devHoldings / 1e9) *
                           100
                         ).toFixed(2)}%`
-                      : 'unknown'}
+                      : <Spinner/>}
                       <img className="w-6 h-6" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAAy5JREFUeF7tm2FSAyEMhclJ1JvoSdSTqCfRm9ib6E2i6UAHUiCprNtl5+0vx9Jd8vES4LGlgKtLgMCnTwCADIUAEACNFREoCAqCgsYIQEFj/C6qQcx8G0J4CSHchxDk75muQ+zsMxF9ezvuBsTMAuXTe+ONtxNIH54+ugBF5Xx5bjhRmzuPkryAJK1eJwre09UPInq2GnoBSWpJiu3pOhDRgxWQFxBbN5rxcyIy4zcbSODMDEA9BQCQkR8ABEBNAqhBS+zFkGJIMaRYjQDWQVZ9wUKxTwgK2oiCqrZB9I+ki48hhKdKX8XA6ppXyoMqntOZWb+J6C49r+djraUg01dhZgEklklyIYsgWgOtgnsgouQKyv5Q/Kmaq/n6G/hbBqhp1WwGUNzw5h11WQ0KkA78vaFMDbJp1VwFUJZaopLC+81GvQAUFXZTUZIoJKVn7TsCqbjyoC0n9FqAcmukNeo6WK8hp+uQTjNdfwTuGcREdAuApC+noKJSpMN/BVSY7ZU65K4/0rE9Aip8ZGbWdUjXn67Rt0dAWnn5UZROL6lf3ZOYmQDp6VqU0TokaNUhDc88iZkGkJ6JmLlXtHUdSm29y4DT4/YKSNehpJSL6s9sRVpSLE8zSbHm2b9a60gqvqvthVl/ZgPkXQel9NB1SACdTkl/92lm/dk7IF2HbvNVu1HDtlWDVDqkkf3rQjEF193LeT30LRTp1sp2FFCxQs9nQWv/lbe9FqB8c6k3q2llW1vw1YqybGBbb5UUs5bH3uhtbFuWyxLnYqYftJDdoWMo1JkBavlEZwyuoqDaSDRcPROs4602PZu5Zq/Vd/MNeaa1jViutW3D0XKN0231nUEHIPmeuIdyr+N6qJUqtf+vpaBL+rSptgBkDAcAAdBYxkJBUBAUNEYAChrjhxoEBUFBYwSgoDF+S9Ygt4Uw1uVVv+16BcfrB7VeNVk1ooUfVvWTzkw1z0OjjSknD7P9DLMXnulHHa0YDyBpE49SxE7dA6SqXVv1jLyAIiSBkw71ZgMl5poYa2+en2ImLm4FXQJyT20ByFor7Wm0/yMWKAgKGtMVFAQFQUFjBKCgMX4/Yd6TZ9aSIGoAAAAASUVORK5CYII="/>
                   </div>
-                  <p> {coinDevHoldings.has(item.coinMint)
-                      ? `${(
-                          Math.round((coinDevHoldings.get(item.coinMint)[1])) )
-                      }%`
-                      : 'unknown'}</p>
-                  <p> {coinDevHoldings.has(item.coinMint)
-                      ? `${(
-                          Math.round((coinDevHoldings.get(item.coinMint)[2])) )
-                      }%`
-                      : 'unknown'}</p>
+                  <div> {coinDevHoldings.has(item.coinMint) && !Number.isNaN(coinDevHoldings.get(item.coinMint)[1].bundlePercentHeld) ?
+                      
+                      `${(
+                        !Number.isNaN( Math.round((coinDevHoldings.get(item.coinMint)[1].bundlePercentHeld))) ? Math.round((coinDevHoldings.get(item.coinMint)[1].bundlePercentHeld)): 
+                      '0' )
+                    }%`
+                      
+                     
+                      : <Spinner/>
+
+                      
+                      }</div>
+     
+                  <div> {coinDevHoldings.has(item.coinMint)
+                      ?
+                      (coinDevHoldings.get(item.coinMint)[2].topTenPercentHeld) == 0 ? '0' : `${(
+                        Math.round((coinDevHoldings.get(item.coinMint)[2].topTenPercentHeld)) )
+                    }%`
+                      
+                     
+                      : <Spinner/>}</div>
                 </div>
                 <div className=" hidden overflow-hidden h-full i text-white text-ellipsis pr-4 justify-end text-sm w-[22rem] max-w-[22rem]  md:flex md:items-center ">
                 <CopyToClipboardButton textToCopy={item.coinMint} />
