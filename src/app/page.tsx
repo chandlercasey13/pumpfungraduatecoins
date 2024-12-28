@@ -67,10 +67,10 @@ export default function Home() {
       
     });
     socket.on("holdings", (holdings) => {
-      console.log(holdings)
+      
       setCoinDevHoldings((prevMap) => {
         const newMap = new Map(prevMap);
-        newMap.set(holdings.coinMint, [holdings.devHoldings, holdings.bundleSupply]);
+        newMap.set(holdings.coinMint, [holdings.devHoldings, holdings.bundleSupply, holdings.tenHolderSupply]);
         return newMap;
       });
       
@@ -170,7 +170,11 @@ export default function Home() {
                           Math.round((coinDevHoldings.get(item.coinMint)[1])) )
                       }%`
                       : 'unknown'}</p>
-                  <p>30</p>
+                  <p> {coinDevHoldings.has(item.coinMint)
+                      ? `${(
+                          Math.round((coinDevHoldings.get(item.coinMint)[2])) )
+                      }%`
+                      : 'unknown'}</p>
                 </div>
                 <div className=" hidden overflow-hidden h-full i text-white text-ellipsis pr-4 justify-end text-sm w-[22rem] max-w-[22rem]  md:flex md:items-center ">
                 <CopyToClipboardButton textToCopy={item.coinMint} />

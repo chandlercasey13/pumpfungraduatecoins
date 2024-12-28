@@ -33,16 +33,16 @@ const sendCachedCoins = (socket) => {
     console.log(coinCache.size);
     for (const coinMint of coinCache.keys()) {
       const cachedCoin = coinCache.get(coinMint);
-      if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply) {
+      if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply || cachedCoin.tenHolderSupply) {
         socket.emit("holdings", {
           coinMint: cachedCoin.coinMint,
           devHoldings: cachedCoin.ownerHoldings,
           bundleSupply: cachedCoin.bundleSupply,
+          tenHolderSupply: cachedCoin.tenHolderSupply
+
+         
         });
 
-        console.log(cachedCoin.ownerHoldings);
-        console.log(cachedCoin.bundleSupply);
-        console.log(cachedCoin.coinMint);
       }
     }
   } else {
@@ -184,6 +184,53 @@ const findBundleHoldings = async (coinMint) => {
   }
 };
 
+
+
+const topTenHoldersSupply = async (coinMint) => {
+  const url = `https://advanced-api.pump.fun/coins/list?sortBy=marketCap`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    for (const coin of data) {
+      // Ensure holders is an array
+   
+      if (coin.coinMint == coinMint) {
+        let totalOwnedPercentage = 0;
+        for (const holder of coin.holders.slice(0, 10)) {
+         
+
+          totalOwnedPercentage += holder.ownedPercentage;
+
+        }
+       
+      return totalOwnedPercentage
+      }
+       else {
+       
+      }
+
+    }
+
+  } catch (err) {
+    console.error("Error in findOwnerHoldings:", err);
+  }
+}
+
+
+
+
 let coinCache = new Map();
 const inProgress = new Set();
 
@@ -205,14 +252,17 @@ const cacheCoins = async (data, socket, solSocket) => {
 
       (async () => {
         try {
+          
           const bundleSupply = await findBundleHoldings(coin.coinMint);
           const ownerHoldings = await findOwnerHoldings(
             coin.dev,
             coin.coinMint
           );
+          const tenHolderSupply= await topTenHoldersSupply(coin.coinMint)
 
           coin.bundleSupply = bundleSupply;
           coin.ownerHoldings = ownerHoldings;
+          coin.tenHolderSupply = tenHolderSupply
 
           coinCache.set(coin.coinMint, coin);
 
@@ -220,6 +270,7 @@ const cacheCoins = async (data, socket, solSocket) => {
             coinMint: coin.coinMint,
             devHoldings: ownerHoldings,
             bundleSupply: bundleSupply,
+            tenHolderSupply: tenHolderSupply
           });
 
           // console.log(`Processed and cached ${coin.coinMint}`);
@@ -232,14 +283,15 @@ const cacheCoins = async (data, socket, solSocket) => {
     } else if (coin && coin.coinMint && coinCache.has(coin.coinMint)) {
       const cachedCoin = coinCache.get(coin.coinMint);
 
-      if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply) {
+      if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply || cachedCoin.tenHolderSupply) {
         socket.emit("holdings", {
           coinMint: cachedCoin.coinMint,
           devHoldings: cachedCoin.ownerHoldings,
           bundleSupply: cachedCoin.bundleSupply,
+          tenHolderSupply: cachedCoin.tenHolderSupply
         });
 
-        console.log(`Emitted cached data for ${cachedCoin.coinMint}`);
+       
       }
     }
   }
