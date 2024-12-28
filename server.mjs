@@ -63,6 +63,9 @@ app.prepare().then(() => {
 
     const solanaWs = new WebSocket(SOLANA_WS_URL);
 
+    let intervalId; // Store the interval ID for cleanup
+
+
     solanaWs.on("open", (solSocket) => {
       console.log("Connected to Solana WebSocket");
 
@@ -72,11 +75,11 @@ app.prepare().then(() => {
         aboutToGraduateCoins(socket, solSocket);
 
         //getXPostCount('9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump')
-        const intervalId = setInterval(() => {
+        intervalId = setInterval(() => {
           aboutToGraduateCoins(socket, solSocket);
         }, intervalTime);
 
-        return intervalId;
+        
       };
 
       startFetching(socket, solSocket);
@@ -85,7 +88,7 @@ app.prepare().then(() => {
 
     socket.on("disconnect", () => {
       console.log(" Solana Socket disconnected");
-
+      clearInterval(intervalId);
       solanaWs.close();
     });
   });
