@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { socket } from "../socket";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import PreviousMap from "postcss/lib/previous-map";
+
 import Spinner from "../components/Spinner"
 import { GrBundle } from "react-icons/gr";
 import { TbNumber10 } from "react-icons/tb";
@@ -15,8 +15,7 @@ interface Coin {
 }
 
 export default function Home() {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [transport, setTransport] = useState<string>("N/A");
+  
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
 
@@ -26,17 +25,17 @@ export default function Home() {
     }
 
     function onConnect() {
-      setIsConnected(true);
-      setTransport(socket.io.engine.transport.name);
+     
+      
 
       socket.io.engine.on("upgrade", (transport: { name: string }) => {
-        setTransport(transport.name);
+        
       });
     }
 
     function onDisconnect() {
-      setIsConnected(false);
-      setTransport("N/A");
+    
+      
     }
 
     const areArraysEqual = (arr1: Coin[], arr2: Coin[]) => {
@@ -97,19 +96,15 @@ export default function Home() {
   const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
     textToCopy,
   }) => {
-    const [copySuccess, setCopySuccess] = useState<string>("");
+    
 
     const handleCopy = async (): Promise<void> => {
-      try {
+     
         await navigator.clipboard.writeText(textToCopy);
-        setCopySuccess("Copied!");
-      } catch (err) {
-        setCopySuccess("Failed to copy!");
-      }
+        
+  
 
-      setTimeout(() => {
-        setCopySuccess("");
-      }, 2000);
+     
     };
     return (
       <button
