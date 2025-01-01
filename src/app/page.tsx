@@ -11,7 +11,7 @@ import { TbNumber10 } from "react-icons/tb";
 interface Coin {
   chainId: number;
   tokenAddress: string;
-  [key: string]: any;
+  [key: string]: string;
 }
 
 export default function Home() {
