@@ -11,9 +11,15 @@ import { TbNumber10 } from "react-icons/tb";
 interface Coin {
   chainId: string;
   tokenAddress: string;
-  [key: string]: string;
+  ticker?: string;
+  name?: string;
+  marketCap?: number;
+  bondingCurveProgress?: number;
+  numHolders?: number;
+  imageUrl?: string;
+  coinMint?: string;
+  [key: string]: string | number | undefined; // Allows other properties with these types
 }
-
 export default function Home() {
   
   const [coins, setCoins] = useState<Coin[]>([]);
@@ -129,8 +135,12 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="flex flex-col w-[10%]  h-full items-center justify-center text-white ">
-                  <h1>{Math.round(item.marketCap).toLocaleString()}</h1>
-                  <p>{Math.round(item.bondingCurveProgress)}%</p>
+                  <h1> {item.bondingCurveProgress !== undefined 
+    ? `${Math.round(item.bondingCurveProgress)}%` 
+    : "N/A"}</h1>
+                  <p>{item.bondingCurveProgress !== undefined
+  ? `${Math.round(item.bondingCurveProgress)}%`
+  : "N/A"}</p>
                 </div>
                 <div className="flex flex-row h-full w-[30%]  items-center justify-center gap-2 text-white text-ellipsis  ">
                  <div className="flex justify-end w-[17%] gap-[.4rem]">
@@ -178,7 +188,7 @@ export default function Home() {
                      
                 </div>
                 <div className=" hidden overflow-hidden h-full i text-white text-ellipsis pr-4 justify-end text-sm w-[22rem] max-w-[22rem]  md:flex md:items-center ">
-                <CopyToClipboardButton textToCopy={item.coinMint} />
+                <CopyToClipboardButton textToCopy={item.coinMint ?? "No Data"} />
                   <p className="w-[90%] text-start text-ellipsis text-[11.5px] ">
                     
                     {item.coinMint}
