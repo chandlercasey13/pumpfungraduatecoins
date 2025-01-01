@@ -20,23 +20,8 @@ export default function Home() {
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
 
   useEffect(() => {
-    if (socket.connected) {
-      onConnect();
-    }
+   
 
-    function onConnect() {
-     
-      
-
-      socket.io.engine.on("upgrade", (transport: { name: string }) => {
-        
-      });
-    }
-
-    function onDisconnect() {
-    
-      
-    }
 
     const areArraysEqual = (arr1: Coin[], arr2: Coin[]) => {
       if (arr1.length !== arr2.length) return false;
@@ -52,8 +37,7 @@ export default function Home() {
       return true;
     };
 
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
+   
     socket.on("data", (newMintList) => {
 
       setCoins((prevCoins) => {
@@ -79,8 +63,7 @@ export default function Home() {
     });
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
+     
       socket.off("data");
       socket.off("holdings");
       socket.disconnect();
