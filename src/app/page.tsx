@@ -9,7 +9,7 @@ import { GrBundle } from "react-icons/gr";
 import { TbNumber10 } from "react-icons/tb";
 
 interface Coin {
-  chainId: number;
+  chainId: string;
   tokenAddress: string;
   [key: string]: string;
 }
