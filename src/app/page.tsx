@@ -135,8 +135,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="flex flex-col w-[10%]  h-full items-center justify-center text-white ">
-                  <h1> {item.bondingCurveProgress !== undefined 
-    ? `${Math.round(item.bondingCurveProgress)}%` 
+                  <h1> {item.marketCap !== undefined 
+    ? `${Math.round(item.marketCap)}%` 
     : "N/A"}</h1>
                   <p>{item.bondingCurveProgress !== undefined
   ? `${Math.round(item.bondingCurveProgress)}%`
