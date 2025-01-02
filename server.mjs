@@ -1,54 +1,17 @@
 import { createServer } from "node:http";
 import next from "next";
 import { Server } from "socket.io";
-import WebSocket from "ws";
-import { Connection, PublicKey } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { getXPostCount } from "./tokenUtilis.mjs";
-import { publicKey, u64, bool } from "@solana/buffer-layout-utils";
-import { u32, u8, struct } from "@solana/buffer-layout";
-
-import { VersionedTransaction, Keypair } from "@solana/web3.js";
-import bs58 from "bs58";
 import dotenv from "dotenv";
-
+import { sendCachedCoins, aboutToGraduateCoins } from "./pumpfun.mjs";
 dotenv.config();
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
-const port = 3000;
+const hostname = "0.0.0.0";
+const port = process.env.PORT || 3000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
-const SOLANA_WS_URL = `${process.env.SOL_WS_URL}`;
-const SOLANA_HTTP_URL = `${process.env.HTTP_RPC_URL}`;
-const RAYDIUM_PUBLIC_KEY = new PublicKey(`${process.env.PUMPFUN_KEY}`);
-const connection = new Connection(SOLANA_HTTP_URL, {
-  wsEndpoint: SOLANA_WS_URL,
-  commitment: "processed",
-});
-
-const sendCachedCoins = (socket) => {
-  if (coinCache.size > 0) {
-    
-    for (const coinMint of coinCache.keys()) {
-      const cachedCoin = coinCache.get(coinMint);
-      if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply || cachedCoin.tenHolderSupply) {
-        socket.emit("holdings", {
-          coinMint: cachedCoin.coinMint,
-          devHoldings: cachedCoin.ownerHoldings,
-          bundleSupply: cachedCoin.bundleSupply,
-          tenHolderSupply: cachedCoin.tenHolderSupply
-
-         
-        });
-
-      }
-    }
-  } else {
-    console.log("CoinCache is empty, nothing to emit.");
-  }
-};
 
 app.prepare().then(() => {
   const httpServer = createServer(handler);
@@ -61,39 +24,39 @@ app.prepare().then(() => {
       sendCachedCoins(socket);
     }, 2000);
 
-    const solanaWs = new WebSocket(SOLANA_WS_URL);
-
-    let intervalId; // Store the interval ID for cleanup
 
 
-    solanaWs.on("open", (solSocket) => {
-      console.log("Connected to Solana WebSocket");
+    let intervalId; 
+
+
 
       const intervalTime = 3000;
 
-      const startFetching = (socket, solSocket) => {
-        aboutToGraduateCoins(socket, solSocket);
-
-        //getXPostCount('9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump')
+      const startFetching = (socket ) => {
+        aboutToGraduateCoins(socket);
         intervalId = setInterval(() => {
-          aboutToGraduateCoins(socket, solSocket);
+          aboutToGraduateCoins(socket, );
         }, intervalTime);
 
         
-      };
+      }
 
-      startFetching(socket, solSocket);
-      aboutToGraduateCoins(socket, solSocket);
+      startFetching(socket );
+      aboutToGraduateCoins(socket);
+
+
+      socket.on("disconnect", () => {
+        console.log(" Solana Socket disconnected");
+        clearInterval(intervalId);
+       
+      });
+
+
     });
 
-    socket.on("disconnect", () => {
-      console.log(" Solana Socket disconnected");
-      clearInterval(intervalId);
-      solanaWs.close();
-    });
-  });
+  
 
-  httpServer
+    httpServer
     .once("error", (err) => {
       console.error(err);
       process.exit(1);
@@ -101,204 +64,11 @@ app.prepare().then(() => {
     .listen(port, () => {
       console.log(`> Ready on http://${hostname}:${port}`);
     });
-});
-
-const aboutToGraduateCoins = async (socket, solSocket) => {
-  const url = "https://advanced-api.pump.fun/coins/about-to-graduate";
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    socket.emit("data", data);
-
-    await cacheCoins(data, socket, solSocket);
-  } catch (error) {
-    console.error("Error fetching coins:", error);
-  }
-};
-
-const findOwnerHoldings = async (coinDev, coinMint) => {
-  const url = `https://frontend-api-v2.pump.fun/balances/${coinDev}?limit=50&offset=0&minBalance=-1`;
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (Array.isArray(data)) {
-      const matchingItem = data.find((item) => item.mint === coinMint);
-      if (matchingItem) {
-        return Math.round(matchingItem.balance / 1e6);
-        //console.log(`Dev: ${coinDev} supply of ${coinMint}:`, Math.round(matchingItem.balance / 1e6));
-      } else {
-        console.log(`No match found for coinMint ${coinMint}.`);
-      }
-    } else {
-      console.error("Response data is not an array:", data);
-    }
-  } catch (err) {
-    console.error("Error in findOwnerHoldings:", err);
-  }
-};
-
-const findBundleHoldings = async (coinMint) => {
-  const url = `https://trench.bot/api/bundle_advanced/${coinMint}`;
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    if (data.total_percentage_bundled) {
-      return data.total_percentage_bundled;
-    } else {
-      console.log(`No bundled supply for ${coinMint}.`);
-    }
-  } catch (err) {
-    console.error("Error in findOwnerHoldings:", err);
-  }
-};
 
 
-
-const topTenHoldersSupply = async (coinMint) => {
-  const url = `https://advanced-api.pump.fun/coins/list?sortBy=marketCap`;
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    for (const coin of data) {
-      // Ensure holders is an array
-   
-      if (coin.coinMint == coinMint) {
-        let totalOwnedPercentage = 0;
-        for (const holder of coin.holders.slice(0, 10)) {
-         
-
-          totalOwnedPercentage += holder.ownedPercentage;
-
-        }
-       
-      return totalOwnedPercentage
-      }
-       else {
-       
-      }
-
-    }
-
-  } catch (err) {
-    console.error("Error in findOwnerHoldings:", err);
-  }
-}
+  });
 
 
-
-
-let coinCache = new Map();
-const inProgress = new Set();
-
-const cacheCoins = async (data, socket, solSocket) => {
-  if (!Array.isArray(data)) {
-    console.error("cacheCoins: Input data must be an array.");
-    return;
-  }
-
-  for (const coin of data) {
-    if (
-      coin &&
-      coin.coinMint &&
-      !coinCache.has(coin.coinMint) &&
-      !inProgress.has(coin.coinMint)
-    ) {
-      inProgress.add(coin.coinMint);
-      // console.log(coin)
-
-      (async () => {
-        try {
-          
-          const bundleSupply = await findBundleHoldings(coin.coinMint);
-          const ownerHoldings = await findOwnerHoldings(
-            coin.dev,
-            coin.coinMint
-          );
-          const tenHolderSupply= await topTenHoldersSupply(coin.coinMint)
-
-          coin.bundleSupply = bundleSupply;
-          coin.ownerHoldings = ownerHoldings;
-          coin.tenHolderSupply = tenHolderSupply
-
-          coinCache.set(coin.coinMint, coin);
-
-          socket.emit("holdings", {
-            coinMint: coin.coinMint,
-            devHoldings: ownerHoldings,
-            bundleSupply: bundleSupply,
-            tenHolderSupply: tenHolderSupply
-          });
-
-          // console.log(`Processed and cached ${coin.coinMint}`);
-        } catch (error) {
-          console.error(`Error processing coin ${coin.coinMint}:`, error);
-        } finally {
-          inProgress.delete(coin.coinMint); // Remove from in-progress
-        }
-      })();
-    } else if (coin && coin.coinMint && coinCache.has(coin.coinMint)) {
-      const cachedCoin = coinCache.get(coin.coinMint);
-
-      if (cachedCoin.ownerHoldings || cachedCoin.bundleSupply || cachedCoin.tenHolderSupply) {
-        socket.emit("holdings", {
-          coinMint: cachedCoin.coinMint,
-          devHoldings: cachedCoin.ownerHoldings,
-          bundleSupply: cachedCoin.bundleSupply,
-          tenHolderSupply: cachedCoin.tenHolderSupply
-        });
-
-       
-      }
-    }
-  }
-};
 
 // function connectSolanaWs(socket) {
 
