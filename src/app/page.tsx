@@ -107,24 +107,24 @@ export default function Home() {
             coins.map((item, index) => (
               <li
                 key={index}
-                className=" relative w-full min-h-[5rem] pr-2 flex items-center justify-start md:justify-start border-b-[1px]   "
+                className=" relative w-full min-h-[5rem] pr-2 flex items-center justify-around md:justify-start border-b-[1px]   "
               >
-                <div className=" w-14 
+                <div className=" w-12 
                  h-full flex justify-center items-center md:pl-4 md:w-20 ">
                   <Avatar>
                     <AvatarImage src={item.imageUrl} />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </div>
-                <div className="flex flex-col h-full w-[10%]  md:text-base md:w-[20%] max-w-26 items-center justify-center text-xs text-white text-ellipsis">
+                <div className="flex flex-col h-full w-[15%]  md:text-base md:w-[20%] max-w-26 items-center justify-center text-xs text-white text-ellipsis">
                   <div className="w-full ">
                     <h1 className="font-semibold hidden sm:flex">{item.ticker}</h1>
-                    <p className="text-nowrap truncate font-extralight text-xs  ">
+                    <p className="text-nowrap truncate font-bold text-xs  ">
                       {item.name}
                     </p>
                   </div>
                 </div>
-                <div className="flex flex-col w-[10%]  h-full items-center justify-center text-xs md:text-base text-white ">
+                <div className="flex flex-col w-[10%]  h-full items-center justify-center text-sm md:text-base text-white ">
                   {item.marketCap ? (
                     <h1>
                       {Math.round(Number(item.marketCap)).toLocaleString()}
@@ -138,15 +138,15 @@ export default function Home() {
                       : "N/A"}
                   </p>
                 </div>
-                <div className="flex flex-row h-full w-[65%]  md:w-[30%] text-xs md:text-base  items-center justify-center md:gap-2 text-white text-ellipsis  ">
+                <div className="flex flex-row h-full w-[58%]  md:w-[30%] text-xs md:text-base  items-center justify-center md:gap-2 text-white text-ellipsis  ">
                   <div className="flex justify-end w-[25%] md:w-[17%] gap-[.4rem]">
-                    <p>{item.numHolders}</p>
+                    <p className="flex items-center">{item.numHolders}</p>
                     <img
                       className="w-5 h-5 "
                       src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAA7VJREFUeF7tmoFt3DAMRcVNmk2aSZpM0mSSpJMkmaS3CXs/sABDtShSFHUHQwYOl+BkWXr6JCWalNYlEqDFRyawADUUsgAtQD4nshR0zwpi5h8ppV8ppZ8pJfyNz2UbM77x+UNEnz4d9N99EwUx8+/rkF8MwwaodyJ6NdwzpOlUQMwMpXw4Rj4d1DRAHaqROL7MUtMUQMwM1UA9Iy+Y3PPIDo/6Cgc0WDnlHMKVFApI6XO+/coWrS5bZAMIKC5HOEkoz0SE+0OuaEB/t9B9NHiAweTEEL4Bg4liC3DYDxE9hNBJKYUBYuanlNJbZeCfRPSondQGCX3V/FiYiiIB1dRz6VnxhpK6+tQsUAighnoeW2ZVG3jDp3X3K4GKAgRzgImVl8m0jgYubBlCIloUoNq+x+0rBHW64U/bBzFzzf88EFE+jGpcwH9tNl+E/ssrxA9FKYgPV4PI/bwFSKGr6+48bAHKx7tXtOJIaybmjjRnUdBy0pIlCAdUd6QRwnzI6T7KxKTEWLeZnWmjiINl7YCJMA9I5nAv5ZWuCbSQxQ7pFObXOG6YIJ31sCqpCAxHpTtSlHowyDAFKVSU/TxA4W0FdsLfuaHidVArVdvt0xRbrlhA22Str3g0485tQg6o+wGEKig/KCgv7d4yaFZiCqAAJYUrJ8ObBmjnk2Bytfxya1FVjr3VieX3qYAKB4yEmhbU9DeqN1HQfuV2r3ek4gVEta/eFK1FKbW20xU0YtAz+1iAGrQXoFsD2u2Kc4FU/rZaSllYhf/D/VOIgnZQLEVSVmD7owqc+WtPhqD10KGAJoMp5wZFDQc1DFDQcaK1wEe/D90zuQEpcjU9kxxxjynnFLIPUpSmjJiopw83pG4FCa9fqrJH1NnyPj3p1nwsyVFQU1yFsbjObx5AUnFUhhR66jYEhW4ldQFSFGVOydXs8k25IF3aVnSNyQxIEa1CVSM5JMXYzO/OTIAUfic0P6zx1iPfpuB5VkC1wij0dTPllOAaSjKpSA2ooZ4u+9YoorcNM9cW0xTVLIAk9bgLo3pB1O5rLKhaRRZAtbCufthoCK3+JBVpK20tgA6Llq4V8nenniL8H5XroYkqoKgACZHhbtWzg1SrVVIFFS2gmv9xV622zMT7u7dWSQuotgoqmXon6blfqClSRV4toLCyXs/kNfd6axq1gKZVlWombWmzACloecqGT68g8FuAGioKB6RQ8WmbqEzstLNXTGwBakBagBYghR0JTZaCloKWgnwEloJ8/P4BP9/aWMUHMawAAAAASUVORK5CYII="
                     />
                   </div>
-                  <div className="flex items-center justify-end gap-[.4rem] w-[30%]  ">
+                  <div className="flex items-center justify-end gap-[.4rem] w-[33%]  ">
                     {coinDevHoldings.has(item.coinMint) ? (
                       `${(
                         (coinDevHoldings.get(item.coinMint)[0].devHoldings /
@@ -163,7 +163,7 @@ export default function Home() {
                       src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAAy5JREFUeF7tm2FSAyEMhclJ1JvoSdSTqCfRm9ib6E2i6UAHUiCprNtl5+0vx9Jd8vES4LGlgKtLgMCnTwCADIUAEACNFREoCAqCgsYIQEFj/C6qQcx8G0J4CSHchxDk75muQ+zsMxF9ezvuBsTMAuXTe+ONtxNIH54+ugBF5Xx5bjhRmzuPkryAJK1eJwre09UPInq2GnoBSWpJiu3pOhDRgxWQFxBbN5rxcyIy4zcbSODMDEA9BQCQkR8ABEBNAqhBS+zFkGJIMaRYjQDWQVZ9wUKxTwgK2oiCqrZB9I+ki48hhKdKX8XA6ppXyoMqntOZWb+J6C49r+djraUg01dhZgEklklyIYsgWgOtgnsgouQKyv5Q/Kmaq/n6G/hbBqhp1WwGUNzw5h11WQ0KkA78vaFMDbJp1VwFUJZaopLC+81GvQAUFXZTUZIoJKVn7TsCqbjyoC0n9FqAcmukNeo6WK8hp+uQTjNdfwTuGcREdAuApC+noKJSpMN/BVSY7ZU65K4/0rE9Aip8ZGbWdUjXn67Rt0dAWnn5UZROL6lf3ZOYmQDp6VqU0TokaNUhDc88iZkGkJ6JmLlXtHUdSm29y4DT4/YKSNehpJSL6s9sRVpSLE8zSbHm2b9a60gqvqvthVl/ZgPkXQel9NB1SACdTkl/92lm/dk7IF2HbvNVu1HDtlWDVDqkkf3rQjEF193LeT30LRTp1sp2FFCxQs9nQWv/lbe9FqB8c6k3q2llW1vw1YqybGBbb5UUs5bH3uhtbFuWyxLnYqYftJDdoWMo1JkBavlEZwyuoqDaSDRcPROs4602PZu5Zq/Vd/MNeaa1jViutW3D0XKN0231nUEHIPmeuIdyr+N6qJUqtf+vpaBL+rSptgBkDAcAAdBYxkJBUBAUNEYAChrjhxoEBUFBYwSgoDF+S9Ygt4Uw1uVVv+16BcfrB7VeNVk1ooUfVvWTzkw1z0OjjSknD7P9DLMXnulHHa0YDyBpE49SxE7dA6SqXVv1jLyAIiSBkw71ZgMl5poYa2+en2ImLm4FXQJyT20ByFor7Wm0/yMWKAgKGtMVFAQFQUFjBKCgMX4/Yd6TZ9aSIGoAAAAASUVORK5CYII="
                     />
                   </div>
-                  <div className="flex justify-end items-center w-[25%] gap-[.4rem]">
+                  <div className="flex justify-end items-center w-[25%] gap-[.4rem] text-xs">
                     {" "}
                     {coinDevHoldings.has(item.coinMint) &&
                     !Number.isNaN(
@@ -192,7 +192,7 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className=" flex items-center justify-end w-[25%] h-full gap-[.4rem]">
+                  <div className=" flex items-center justify-end w-[25%] h-full gap-[.4rem] ">
                     {" "}
                     {coinDevHoldings.has(item.coinMint) ? (
                       coinDevHoldings.get(item.coinMint)[2].topTenPercentHeld ==
