@@ -108,7 +108,7 @@ export default function Home() {
             coins.map((item, index) => (
               <li
                 key={index}
-                className=" relative w-full min-h-[5rem] pr-2 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   "
+                className=" relative w-full min-h-[3.95rem]  md:min-h-[5rem] pr-2 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   "
               >
                 <div className=" w-12 
                  h-full flex justify-center items-center md:pl-4 md:w-20 ">
