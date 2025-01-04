@@ -26,19 +26,19 @@ export default function Home() {
   const [changedCoins, setChangedCoins] = useState<string[]>([]);
 
   useEffect(() => {
-    const areArraysEqual = (arr1: Coin[], arr2: Coin[]) => {
-      if (arr1.length !== arr2.length) return false;
+    // const areArraysEqual = (arr1: Coin[], arr2: Coin[]) => {
+    //   if (arr1.length !== arr2.length) return false;
 
-      for (let i = 0; i < arr1.length; i++) {
-        if (
-          arr1[i].tokenAddress !== arr2[i].tokenAddress ||
-          arr1[i].marketCap !== arr2[i].marketCap
-        ) {
-          return false;
-        }
-      }
-      return true;
-    };
+    //   for (let i = 0; i < arr1.length; i++) {
+    //     if (
+    //       arr1[i].tokenAddress !== arr2[i].tokenAddress ||
+    //       arr1[i].marketCap !== arr2[i].marketCap
+    //     ) {
+    //       return false;
+    //     }
+    //   }
+    //   return true;
+    // };
 
 
     const detectChanges = (prevCoins: Coin[], newMintList: Coin[]) => {
@@ -144,7 +144,7 @@ export default function Home() {
             coins.map((item, index) => (
               <li
                 key={index}
-                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[3.95rem]   md:min-h-[5rem] pr-2 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
+                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[5rem]   md:min-h-[5rem] pr-2 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
               >
                 <div className=" w-12 
                  h-full flex justify-center items-center md:pl-4 md:w-20 ">
