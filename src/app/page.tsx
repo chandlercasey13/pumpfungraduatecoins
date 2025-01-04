@@ -17,12 +17,13 @@ interface Coin {
   bondingCurveProgress?: number;
   numHolders?: number;
   imageUrl?: string;
-  coinMint?: string;
+  coinMint: string;
   [key: string]: string | number | undefined; // Allows other properties with these types
 }
 export default function Home() {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
+  const [changedCoins, setChangedCoins] = useState<string[]>([]);
 
   useEffect(() => {
     const areArraysEqual = (arr1: Coin[], arr2: Coin[]) => {
@@ -39,17 +40,52 @@ export default function Home() {
       return true;
     };
 
+
+    const detectChanges = (prevCoins: Coin[], newMintList: Coin[]) => {
+      const addedOrUpdated = newMintList.filter(
+        (newCoin) =>
+          !prevCoins.some(
+            (prevCoin) =>
+              prevCoin.coinMint === newCoin.coinMint &&
+              prevCoin.marketCap === newCoin.marketCap
+          )
+      );
+
+
+      const changedTokenAddresses = addedOrUpdated.map(
+        (coin) => coin.coinMint
+        
+      );
+      return changedTokenAddresses;
+    };
+
+
+
     socket.on("data", (newMintList) => {
       setCoins((prevCoins) => {
-        const isOrderDifferent = !areArraysEqual(prevCoins, newMintList);
+       // console.log(prevCoins)
+        const isOrderDifferent =
+          prevCoins.length !== newMintList.length ||
+          !prevCoins.every(
+            (coin, i) =>
+              coin.coinMint === newMintList[i].coinMint &&
+              coin.marketCap === newMintList[i].marketCap
+          );
 
         if (isOrderDifferent) {
+          
+     
+          const changes = detectChanges(prevCoins, newMintList);
+         
+          setChangedCoins(changes); 
+          
           return newMintList;
         }
-
+ 
         return prevCoins;
       });
     });
+   
     socket.on("holdings", (holdings) => {
       setCoinDevHoldings((prevMap) => {
         const newMap = new Map(prevMap);
@@ -108,7 +144,7 @@ export default function Home() {
             coins.map((item, index) => (
               <li
                 key={index}
-                className=" relative w-full min-h-[3.95rem]  md:min-h-[5rem] pr-2 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   "
+                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[3.95rem]   md:min-h-[5rem] pr-2 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
               >
                 <div className=" w-12 
                  h-full flex justify-center items-center md:pl-4 md:w-20 ">
