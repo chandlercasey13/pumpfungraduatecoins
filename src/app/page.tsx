@@ -7,7 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Spinner from "../components/Spinner";
 import { GrBundle } from "react-icons/gr";
 import { TbNumber10 } from "react-icons/tb";
-
+import Particles from "@/components/ui/particles";
+import BlurFade from "@/components/ui/blur-fade"
 interface Coin {
   chainId: string;
   tokenAddress: string;
@@ -127,11 +128,19 @@ export default function Home() {
   };
 
   return (
-    <main className="h-screen w-screen flex flex-col justify-center items-center bg-black/85">
-      <h1 className="font-bold text-2xl pb-6 pt-4 md:text-5xl md:pb-10 text-white">
+
+    <main className="h-screen w-screen flex flex-col justify-center items-center bg-black/85 overflow-hidden">
+     <Particles
+     className="absolute inset-0 z-0"
+     quantity={800}
+     ease={80}
+     
+     refresh/>
+     <BlurFade direction="up" className="h-screen w-screen flex flex-col justify-center items-center  overflow-hidden">
+      <h1 className="font-bold text-2xl pb-6  md:text-5xl md:pb-10 text-white">
         Pump.Fun about to Graduate
       </h1>
-      <div className=" h-full w-full flex justify-center relative  bg-white/20 backdrop-blur-md md:h-[50rem] max-w-[70rem]  md:rounded-lg overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
+      <div className=" h-full w-full flex justify-center relative  bg-neutral-600 backdrop-blur-xl md:h-[50rem] max-w-[70rem]  md:rounded-lg overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
         <ul className=" h-full w-full flex flex-col ">
           {coins.length === 0 ? (
             <li className="w-full h-full flex justify-center items-center">
@@ -264,6 +273,8 @@ export default function Home() {
           )}
         </ul>
       </div>
+      </BlurFade>
     </main>
+   
   );
 }
