@@ -7,7 +7,7 @@ import Chart from "../components/tvChart"
 import Spinner from "../components/ui/Spinner";
 import { GrBundle } from "react-icons/gr";
 import { TbNumber10 } from "react-icons/tb";
-import Particles from "@/components/ui/particles";
+
 import BlurFade from "@/components/ui/blur-fade"
 interface Coin {
   chainId: string;
