@@ -172,8 +172,9 @@ export default function Home() {
                 </div>
 
 
-
-                <Chart/>
+<div className="h-full">
+                <Chart />
+                </div>
                 <div className="flex flex-col w-[10%]  h-full items-center justify-center text-sm md:text-base text-white ">
                   {item.marketCap ? (
                     <h1>
