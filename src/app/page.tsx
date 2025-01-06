@@ -129,14 +129,9 @@ export default function Home() {
 
   return (
 
-    <main className="h-screen w-screen flex flex-col justify-center items-center bg-black/85 md:overflow-hidden">
-     <Particles
-     className="absolute inset-0 z-0"
-     quantity={800}
-     ease={80}
-     
-     refresh/>
-     <BlurFade direction="up" className="h-screen w-screen flex flex-col justify-center items-center  md:overflow-hidden">
+    <main className=" relative min-h-screen w-screen flex flex-col justify-center items-center bg-black/85 md:overflow-hidden">
+   
+     <BlurFade direction="up" className=" h-full w-screen flex flex-col justify-center items-center  md:overflow-hidden">
       <h1 className="font-bold text-2xl pb-6  md:text-5xl md:pb-10 text-white">
         Pump.Fun about to Graduate
       </h1>
@@ -153,7 +148,7 @@ export default function Home() {
             coins.map((item, index) => (
               <li
                 key={index}
-                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[6rem]   md:min-h-[5rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
+                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[6rem] h-[6rem]   md:min-h-[5rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
               >
                 <div className=" w-12 
                  h-full flex justify-center items-center mr-2 pl-2 md:pl-4 md:w-20 ">
