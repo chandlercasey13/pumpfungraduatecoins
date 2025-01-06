@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { socket } from "../socket";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-import Spinner from "../components/Spinner";
+import Chart from "../components/tvChart"
+import Spinner from "../components/ui/Spinner";
 import { GrBundle } from "react-icons/gr";
 import { TbNumber10 } from "react-icons/tb";
 
@@ -124,6 +124,10 @@ export default function Home() {
                     </p>
                   </div>
                 </div>
+
+
+
+                <Chart/>
                 <div className="flex flex-col w-[10%]  h-full items-center justify-center text-sm md:text-base text-white ">
                   {item.marketCap ? (
                     <h1>
