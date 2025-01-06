@@ -16,8 +16,8 @@ const Chart = () => {
                 textColor: 'transparent',
             },
             grid: {
-                vertLines: { color: '#525252' },
-                horzLines: { color: '#525252' },
+                vertLines: { color: 'transparent' },
+                horzLines: { color: 'transparent' },
             },
             rightPriceScale: {
                 visible: false, 
