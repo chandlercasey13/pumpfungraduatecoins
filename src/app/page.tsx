@@ -140,7 +140,7 @@ export default function Home() {
       <h1 className="font-bold text-2xl pb-6  md:text-5xl md:pb-10 text-white">
         Pump.Fun about to Graduate
       </h1>
-      <div className=" h-full w-full flex justify-center relative  bg-neutral-600 backdrop-blur-xl md:h-[50rem] max-w-[70rem]  md:rounded-lg overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
+      <div className=" h-full w-full flex justify-center relative  bg-white/30 backdrop-blur-sxl md:h-[50rem] max-w-[70rem]  md:rounded-lg overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
         <ul className=" h-full w-full flex flex-col ">
           {coins.length === 0 ? (
             <li className="w-full h-full flex justify-center items-center">
@@ -153,16 +153,16 @@ export default function Home() {
             coins.map((item, index) => (
               <li
                 key={index}
-                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[5rem]   md:min-h-[5rem] pr-2 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
+                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[5rem]   md:min-h-[6rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
               >
                 <div className=" w-12 
-                 h-full flex justify-center items-center md:pl-4 md:w-20 ">
+                 h-full flex justify-center items-center mr-2 md:pl-4 md:w-20 ">
                   <Avatar>
                     <AvatarImage src={item.imageUrl} />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </div>
-                <div className="flex flex-col h-full w-[15%]  md:text-base md:w-[20%] max-w-26 items-center justify-center text-xs text-white text-ellipsis">
+                <div className="flex flex-col h-full w-[10%] mr-4  md:text-base md:w-[20%] max-w-26 items-center justify-center text-xs text-white text-ellipsis">
                   <div className="w-full ">
                     <h1 className="font-semibold hidden sm:flex">{item.ticker}</h1>
                     <p className="text-nowrap truncate font-bold text-xs  ">
@@ -172,10 +172,10 @@ export default function Home() {
                 </div>
 
 
-<div className="h-full">
+<div className="h-full w-[10%] md:max-w-[20%]">
                 <Chart />
                 </div>
-                <div className="flex flex-col w-[10%]  h-full items-center justify-center text-sm md:text-base text-white ">
+                <div className="flex flex-col w-[18%]  h-full items-center justify-center text-sm md:text-base text-white ">
                   {item.marketCap ? (
                     <h1>
                       {Math.round(Number(item.marketCap)).toLocaleString()}
@@ -190,7 +190,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex flex-row h-full w-[58%]  md:w-[30%] text-xs md:text-base text-[10px]  items-center justify-center md:gap-2 text-white text-ellipsis  ">
-                  <div className="flex justify-end w-[27%] md:w-[17%] gap-[.4rem] ">
+                  <div className="flex justify-end w-[20%] md:w-[17%] gap-[.4rem] ">
                     <p className="flex items-center">{item.numHolders}</p>
                     <img
                       className="w-4 h-4  md:w-5 md:h-5 "
