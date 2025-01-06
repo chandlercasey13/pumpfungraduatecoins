@@ -156,7 +156,7 @@ export default function Home() {
                 className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[5rem]   md:min-h-[6rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
               >
                 <div className=" w-12 
-                 h-full flex justify-center items-center mr-2 md:pl-4 md:w-20 ">
+                 h-full flex justify-center items-center mr-2 pl-1 md:pl-4 md:w-20 ">
                   <Avatar>
                     <AvatarImage src={item.imageUrl} />
                     <AvatarFallback>CN</AvatarFallback>
