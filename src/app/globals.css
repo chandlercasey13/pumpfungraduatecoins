@@ -6,6 +6,30 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
+
+
+
+
+.highlight {
+  animation: bgHighlight .5s ease-in-out;
+}
+
+/* Keyframes for the animation */
+@keyframes bgHighlight {
+  0% {
+    background-color:rgba(0,0,0,.1);
+  }
+  50% {
+    background-color:rgba(0,0,0,.4);
+  }
+  100% {
+    background-color: transparent; /* Revert to the original */
+  }
+}
+
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;

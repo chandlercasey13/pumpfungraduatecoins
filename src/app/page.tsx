@@ -7,7 +7,8 @@ import Chart from "../components/tvChart"
 import Spinner from "../components/ui/Spinner";
 import { GrBundle } from "react-icons/gr";
 import { TbNumber10 } from "react-icons/tb";
-
+import Particles from "@/components/ui/particles";
+import BlurFade from "@/components/ui/blur-fade"
 interface Coin {
   chainId: string;
   tokenAddress: string;
@@ -17,39 +18,75 @@ interface Coin {
   bondingCurveProgress?: number;
   numHolders?: number;
   imageUrl?: string;
-  coinMint?: string;
+  coinMint: string;
   [key: string]: string | number | undefined; // Allows other properties with these types
 }
 export default function Home() {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
+  const [changedCoins, setChangedCoins] = useState<string[]>([]);
 
   useEffect(() => {
-    const areArraysEqual = (arr1: Coin[], arr2: Coin[]) => {
-      if (arr1.length !== arr2.length) return false;
+    // const areArraysEqual = (arr1: Coin[], arr2: Coin[]) => {
+    //   if (arr1.length !== arr2.length) return false;
 
-      for (let i = 0; i < arr1.length; i++) {
-        if (
-          arr1[i].tokenAddress !== arr2[i].tokenAddress ||
-          arr1[i].marketCap !== arr2[i].marketCap
-        ) {
-          return false;
-        }
-      }
-      return true;
+    //   for (let i = 0; i < arr1.length; i++) {
+    //     if (
+    //       arr1[i].tokenAddress !== arr2[i].tokenAddress ||
+    //       arr1[i].marketCap !== arr2[i].marketCap
+    //     ) {
+    //       return false;
+    //     }
+    //   }
+    //   return true;
+    // };
+
+
+    const detectChanges = (prevCoins: Coin[], newMintList: Coin[]) => {
+      const addedOrUpdated = newMintList.filter(
+        (newCoin) =>
+          !prevCoins.some(
+            (prevCoin) =>
+              prevCoin.coinMint === newCoin.coinMint &&
+              prevCoin.marketCap === newCoin.marketCap
+          )
+      );
+
+
+      const changedTokenAddresses = addedOrUpdated.map(
+        (coin) => coin.coinMint
+        
+      );
+      return changedTokenAddresses;
     };
+
+
 
     socket.on("data", (newMintList) => {
       setCoins((prevCoins) => {
-        const isOrderDifferent = !areArraysEqual(prevCoins, newMintList);
+       // console.log(prevCoins)
+        const isOrderDifferent =
+          prevCoins.length !== newMintList.length ||
+          !prevCoins.every(
+            (coin, i) =>
+              coin.coinMint === newMintList[i].coinMint &&
+              coin.marketCap === newMintList[i].marketCap
+          );
 
         if (isOrderDifferent) {
+          
+     
+          const changes = detectChanges(prevCoins, newMintList);
+         
+          setChangedCoins(changes); 
+          
           return newMintList;
         }
-
+ 
         return prevCoins;
       });
     });
+   
     socket.on("holdings", (holdings) => {
       setCoinDevHoldings((prevMap) => {
         const newMap = new Map(prevMap);
@@ -91,23 +128,32 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen w-screen flex flex-col justify-center items-center bg-black/85">
-      <h1 className="font-bold text-2xl pb-6 pt-4 md:text-5xl md:pb-10 text-white">
+
+    <main className="h-screen w-screen flex flex-col justify-center items-center bg-black/85 overflow-hidden">
+     <Particles
+     className="absolute inset-0 z-0"
+     quantity={800}
+     ease={80}
+     
+     refresh/>
+     <BlurFade direction="up" className="h-screen w-screen flex flex-col justify-center items-center  overflow-hidden">
+      <h1 className="font-bold text-2xl pb-6  md:text-5xl md:pb-10 text-white">
         Pump.Fun about to Graduate
       </h1>
-      <div className="h-full w-full flex justify-center relative  bg-white/20 backdrop-blur-sm md:h-[50rem] max-w-[70rem]  border-[1px] border-color-white rounded-md overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
-        <ul className="h-full w-full flex flex-col ">
+      <div className=" h-full w-full flex justify-center relative  bg-neutral-600 backdrop-blur-xl md:h-[50rem] max-w-[70rem]  md:rounded-lg overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
+        <ul className=" h-full w-full flex flex-col ">
           {coins.length === 0 ? (
-            <li className="text-white w-full h-full flex justify-center items-center">
+            <li className="w-full h-full flex justify-center items-center">
               <div className="w-40 h-40">
                 <Spinner />
               </div>
-            </li>
+              </li>
+            
           ) : (
             coins.map((item, index) => (
               <li
                 key={index}
-                className=" relative w-full min-h-[5rem] pr-2 flex items-center justify-around md:justify-start border-b-[1px]   "
+                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[5rem]   md:min-h-[5rem] pr-2 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
               >
                 <div className=" w-12 
                  h-full flex justify-center items-center md:pl-4 md:w-20 ">
@@ -231,6 +277,8 @@ export default function Home() {
           )}
         </ul>
       </div>
+      </BlurFade>
     </main>
+   
   );
 }
