@@ -186,7 +186,7 @@ export default function Home() {
                 </div>
 
 
-                <div className="flex flex-row h-full w-[40%] py-2 md:w-[30%] text-xs md:text-base text-[10px]  items-center justify-center md:gap-2 text-white text-ellipsis  ">
+                <div className="flex flex-row h-full w-[40%] py-3 md:w-[30%] text-xs md:text-base text-[10px]  items-center justify-center md:gap-2 text-white text-ellipsis  ">
                   
                   
                   
