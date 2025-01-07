@@ -3,7 +3,7 @@ import next from "next";
 import { Server } from "socket.io";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import dotenv from "dotenv";
-import { sendCachedCoins, aboutToGraduateCoins } from "./pumpfun.mjs";
+import { sendCachedCoins, aboutToGraduateCoins } from "./pumpFunData.mjs";
 dotenv.config();
 
 const dev = process.env.NODE_ENV !== "production";

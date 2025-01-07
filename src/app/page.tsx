@@ -138,8 +138,8 @@ export default function Home() {
       <div className=" h-full w-full flex justify-center relative  bg-white/30 backdrop-blur-sxl md:h-[50rem] max-w-[70rem]  md:rounded-lg md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
         <ul className=" h-full w-full flex flex-col ">
           {coins.length === 0 ? (
-            <li className="w-full h-full flex justify-center items-center">
-              <div className="w-40 h-40">
+            <li className="w-full h-screen flex justify-center items-center">
+              <div className="  w-40 h-40">
                 <Spinner />
               </div>
               </li>
@@ -204,10 +204,7 @@ export default function Home() {
                   <div className="flex items-center justify-center gap-[.4rem] w-full h-1/2  ">
                     {coinDevHoldings.has(item.coinMint) ? (
                       `${(
-                        (coinDevHoldings.get(item.coinMint)[0].devHoldings /
-                          1e9) *
-                        100
-                      ).toFixed(2)}%`
+                        (coinDevHoldings.get(item.coinMint)[0].devHoldings))}%`
                     ) : (
                       <div className="w-4 h-4">
                         <Spinner />

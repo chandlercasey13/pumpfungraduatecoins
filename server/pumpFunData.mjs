@@ -66,7 +66,9 @@ const findOwnerHoldings = async (coinDev, coinMint) => {
     if (Array.isArray(data)) {
       const matchingItem = data.find((item) => item.mint === coinMint);
       if (matchingItem) {
-        return Math.round(matchingItem.balance / 1e6);
+       let roundedHoldings = Math.round(matchingItem.balance / 1e6)
+       
+        return (Math.round((roundedHoldings/1e9)*100))
       }
     } else {
       console.error("Response data is not an array:", data);
