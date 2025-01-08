@@ -1,15 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { socket } from "../socket";
+
+import { initializeSocketListeners } from "../lib/socketData";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import Chart from "../components/tvChart"
+import Chart from "../components/tvChart";
 import Spinner from "../components/ui/Spinner";
 import { GrBundle } from "react-icons/gr";
 import { TbNumber10 } from "react-icons/tb";
 
-import BlurFade from "@/components/ui/blur-fade"
-interface Coin {
+import BlurFade from "@/components/ui/blur-fade";
+
+export interface Coin {
   chainId: string;
   tokenAddress: string;
   ticker?: string;
@@ -19,92 +22,23 @@ interface Coin {
   numHolders?: number;
   imageUrl?: string;
   coinMint: string;
-  [key: string]: string | number | undefined; // Allows other properties with these types
+  [key: string]: string | number | undefined;
 }
+
 export default function Home() {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
   const [changedCoins, setChangedCoins] = useState<string[]>([]);
 
+
   useEffect(() => {
-    // const areArraysEqual = (arr1: Coin[], arr2: Coin[]) => {
-    //   if (arr1.length !== arr2.length) return false;
+    const cleanup = initializeSocketListeners(
+      setCoins,
+      setChangedCoins,
+      setCoinDevHoldings
+    );
 
-    //   for (let i = 0; i < arr1.length; i++) {
-    //     if (
-    //       arr1[i].tokenAddress !== arr2[i].tokenAddress ||
-    //       arr1[i].marketCap !== arr2[i].marketCap
-    //     ) {
-    //       return false;
-    //     }
-    //   }
-    //   return true;
-    // };
-
-
-    const detectChanges = (prevCoins: Coin[], newMintList: Coin[]) => {
-      const addedOrUpdated = newMintList.filter(
-        (newCoin) =>
-          !prevCoins.some(
-            (prevCoin) =>
-              prevCoin.coinMint === newCoin.coinMint &&
-              prevCoin.marketCap === newCoin.marketCap
-          )
-      );
-
-
-      const changedTokenAddresses = addedOrUpdated.map(
-        (coin) => coin.coinMint
-        
-      );
-      return changedTokenAddresses;
-    };
-
-
-
-    socket.on("data", (newMintList) => {
-      setCoins((prevCoins) => {
-       // console.log(prevCoins)
-        const isOrderDifferent =
-          prevCoins.length !== newMintList.length ||
-          !prevCoins.every(
-            (coin, i) =>
-              coin.coinMint === newMintList[i].coinMint &&
-              coin.marketCap === newMintList[i].marketCap
-          );
-
-        if (isOrderDifferent) {
-          
-     
-          const changes = detectChanges(prevCoins, newMintList);
-         
-          setChangedCoins(changes); 
-          
-          return newMintList;
-        }
- 
-        return prevCoins;
-      });
-    });
-   
-    socket.on("holdings", (holdings) => {
-      setCoinDevHoldings((prevMap) => {
-        const newMap = new Map(prevMap);
-        newMap.set(holdings.coinMint, [
-          { devHoldings: holdings.devHoldings },
-          { bundlePercentHeld: holdings.bundleSupply },
-          { topTenPercentHeld: holdings.tenHolderSupply },
-        ]);
-        return newMap;
-      });
-     
-    });
-
-    return () => {
-      socket.off("data");
-      socket.off("holdings");
-      socket.disconnect();
-    };
+    return () => cleanup();
   }, []);
 
   interface CopyToClipboardButtonProps {
@@ -128,168 +62,164 @@ export default function Home() {
   };
 
   return (
-
     <main className=" relative min-h-screen w-screen flex flex-col justify-center items-center bg-black/85 md:overflow-hidden">
-   
-     <BlurFade direction="up" className=" h-full w-screen flex flex-col justify-center items-center  md:overflow-hidden">
-      <h1 className=" h-[10%]  font-bold text-2xl pb-6  md:text-5xl md:pb-10 text-white">
-        Pump.Fun about to Graduate
-      </h1>
-      <div className=" h-full w-full flex justify-center relative  bg-white/30 backdrop-blur-sxl md:h-[50rem] max-w-[70rem]  md:rounded-lg md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
-        <ul className=" h-full w-full flex flex-col ">
-          {coins.length === 0 ? (
-            <li className="w-full h-[90vh] flex justify-center items-center">
-              <div className="  w-40 h-40">
-                <Spinner />
-              </div>
-              </li>
-            
-          ) : (
-            coins.map((item, index) => (
-              <li
-                key={index}
-                className={`${changedCoins.includes(item.coinMint) ? "highlight" : ""}  relative w-full min-h-[6rem] h-[6rem]   md:min-h-[5rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
-              >
-                <div className=" w-12 
-                 h-full flex justify-center items-center mr-2 pl-2 md:pl-4 md:w-20 ">
-                  <Avatar>
-                    <AvatarImage src={item.imageUrl} />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
+      <BlurFade
+        direction="up"
+        className=" h-full w-screen flex flex-col justify-center items-center  md:overflow-hidden"
+      >
+        <h1 className=" h-[10%]  font-bold text-2xl pb-6  md:text-5xl md:pb-10 text-white">
+          Pump.Fun about to Graduate
+        </h1>
+        <div className=" h-full w-full flex justify-center relative  bg-white/30 backdrop-blur-sxl md:h-[50rem] max-w-[70rem]  md:rounded-lg md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
+          <ul className=" h-full w-full flex flex-col ">
+            {coins.length === 0 ? (
+              <li className="w-full h-[90vh] flex justify-center items-center">
+                <div className="  w-40 h-40">
+                  <Spinner />
                 </div>
-                <div className="flex flex-col h-full w-[20%] mr-4  md:text-base md:w-[20%] max-w-26 items-center justify-center text-xs text-white text-ellipsis">
-                  <div className="w-full ">
-                    <h1 className="font-semibold hidden sm:flex">{item.ticker}</h1>
-                    <p className="text-nowrap truncate font-bold text-xs  ">
-                      {item.name}
+              </li>
+            ) : (
+              coins.map((item, index) => (
+                <li
+                  key={index}
+                  className={`${
+                    changedCoins.includes(item.coinMint) ? "highlight" : ""
+                  }  relative w-full min-h-[6rem] h-[6rem]   md:min-h-[5rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
+                >
+                  <div
+                    className=" w-12 
+                 h-full flex justify-center items-center mr-2 pl-2 md:pl-4 md:w-20 "
+                  >
+                    <Avatar>
+                      <AvatarImage src={item.imageUrl} />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </div>
+                  <div className="flex flex-col h-full w-[20%] mr-4  md:text-base md:w-[20%] max-w-26 items-center justify-center text-xs text-white text-ellipsis">
+                    <div className="w-full ">
+                      <h1 className="font-semibold hidden sm:flex">
+                        {item.ticker}
+                      </h1>
+                      <p className="text-nowrap truncate font-bold text-xs  ">
+                        {item.name}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="h-full w-[15%] md:max-w-[20%]">
+                    <Chart />
+                  </div>
+                  <div className="flex flex-col w-[25%]  h-full items-center justify-center text-sm md:text-base text-white ">
+                    {item.marketCap ? (
+                      <h1>
+                        {Math.round(Number(item.marketCap)).toLocaleString()}
+                      </h1>
+                    ) : (
+                      <h1>N/A</h1>
+                    )}
+                    <p>
+                      {item.bondingCurveProgress !== undefined
+                        ? `${Math.round(item.bondingCurveProgress)}%`
+                        : "N/A"}
                     </p>
                   </div>
-                </div>
 
-
-<div className="h-full w-[15%] md:max-w-[20%]">
-                <Chart />
-                </div>
-                <div className="flex flex-col w-[25%]  h-full items-center justify-center text-sm md:text-base text-white ">
-                  {item.marketCap ? (
-                    <h1>
-                      {Math.round(Number(item.marketCap)).toLocaleString()}
-                    </h1>
-                  ) : (
-                    <h1>N/A</h1>
-                  )}
-                  <p>
-                    {item.bondingCurveProgress !== undefined
-                      ? `${Math.round(item.bondingCurveProgress)}%`
-                      : "N/A"}
-                  </p>
-                </div>
-
-
-                <div className="flex flex-row h-full w-[40%] py-3 md:w-[30%] text-xs md:text-base text-[10px]  items-center justify-center md:gap-2 text-white text-ellipsis  ">
-                  
-                  
-                  
-                  <div className="w-1/2 h-full flex flex-col justify-center items-center  md:flex-row ">
-
-                  <div className="flex justify-center items-center w-full h-1/2 md:w-[17%] gap-[.4rem] ">
-                    <p className="flex items-center">{item.numHolders}</p>
-                    <img
-                      className="  w-4 h-4  md:w-5 md:h-5 "
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAA7VJREFUeF7tmoFt3DAMRcVNmk2aSZpM0mSSpJMkmaS3CXs/sABDtShSFHUHQwYOl+BkWXr6JCWalNYlEqDFRyawADUUsgAtQD4nshR0zwpi5h8ppV8ppZ8pJfyNz2UbM77x+UNEnz4d9N99EwUx8+/rkF8MwwaodyJ6NdwzpOlUQMwMpXw4Rj4d1DRAHaqROL7MUtMUQMwM1UA9Iy+Y3PPIDo/6Cgc0WDnlHMKVFApI6XO+/coWrS5bZAMIKC5HOEkoz0SE+0OuaEB/t9B9NHiAweTEEL4Bg4liC3DYDxE9hNBJKYUBYuanlNJbZeCfRPSondQGCX3V/FiYiiIB1dRz6VnxhpK6+tQsUAighnoeW2ZVG3jDp3X3K4GKAgRzgImVl8m0jgYubBlCIloUoNq+x+0rBHW64U/bBzFzzf88EFE+jGpcwH9tNl+E/ssrxA9FKYgPV4PI/bwFSKGr6+48bAHKx7tXtOJIaybmjjRnUdBy0pIlCAdUd6QRwnzI6T7KxKTEWLeZnWmjiINl7YCJMA9I5nAv5ZWuCbSQxQ7pFObXOG6YIJ31sCqpCAxHpTtSlHowyDAFKVSU/TxA4W0FdsLfuaHidVArVdvt0xRbrlhA22Str3g0485tQg6o+wGEKig/KCgv7d4yaFZiCqAAJYUrJ8ObBmjnk2Bytfxya1FVjr3VieX3qYAKB4yEmhbU9DeqN1HQfuV2r3ek4gVEta/eFK1FKbW20xU0YtAz+1iAGrQXoFsD2u2Kc4FU/rZaSllYhf/D/VOIgnZQLEVSVmD7owqc+WtPhqD10KGAJoMp5wZFDQc1DFDQcaK1wEe/D90zuQEpcjU9kxxxjynnFLIPUpSmjJiopw83pG4FCa9fqrJH1NnyPj3p1nwsyVFQU1yFsbjObx5AUnFUhhR66jYEhW4ldQFSFGVOydXs8k25IF3aVnSNyQxIEa1CVSM5JMXYzO/OTIAUfic0P6zx1iPfpuB5VkC1wij0dTPllOAaSjKpSA2ooZ4u+9YoorcNM9cW0xTVLIAk9bgLo3pB1O5rLKhaRRZAtbCufthoCK3+JBVpK20tgA6Llq4V8nenniL8H5XroYkqoKgACZHhbtWzg1SrVVIFFS2gmv9xV622zMT7u7dWSQuotgoqmXon6blfqClSRV4toLCyXs/kNfd6axq1gKZVlWombWmzACloecqGT68g8FuAGioKB6RQ8WmbqEzstLNXTGwBakBagBYghR0JTZaCloKWgnwEloJ8/P4BP9/aWMUHMawAAAAASUVORK5CYII="
-                    />
-                  </div>
-
-
-                  <div className="flex items-center justify-center gap-[.4rem] w-full h-1/2  ">
-                    {coinDevHoldings.has(item.coinMint) ? (
-                      `${(
-                        (coinDevHoldings.get(item.coinMint)[0].devHoldings))}%`
-                    ) : (
-                      <div className="w-4 h-4">
-                        <Spinner />
+                  <div className="flex flex-row h-full w-[40%] py-3 md:w-[30%] text-xs md:text-base text-[10px]  items-center justify-center md:gap-2 text-white text-ellipsis  ">
+                    <div className="w-1/2 h-full flex flex-col justify-center items-center  md:flex-row ">
+                      <div className="flex justify-center items-center w-full h-1/2 md:w-[17%] gap-[.4rem] ">
+                        <p className="flex items-center">{item.numHolders}</p>
+                        <img
+                          className="  w-4 h-4  md:w-5 md:h-5 "
+                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAA7VJREFUeF7tmoFt3DAMRcVNmk2aSZpM0mSSpJMkmaS3CXs/sABDtShSFHUHQwYOl+BkWXr6JCWalNYlEqDFRyawADUUsgAtQD4nshR0zwpi5h8ppV8ppZ8pJfyNz2UbM77x+UNEnz4d9N99EwUx8+/rkF8MwwaodyJ6NdwzpOlUQMwMpXw4Rj4d1DRAHaqROL7MUtMUQMwM1UA9Iy+Y3PPIDo/6Cgc0WDnlHMKVFApI6XO+/coWrS5bZAMIKC5HOEkoz0SE+0OuaEB/t9B9NHiAweTEEL4Bg4liC3DYDxE9hNBJKYUBYuanlNJbZeCfRPSondQGCX3V/FiYiiIB1dRz6VnxhpK6+tQsUAighnoeW2ZVG3jDp3X3K4GKAgRzgImVl8m0jgYubBlCIloUoNq+x+0rBHW64U/bBzFzzf88EFE+jGpcwH9tNl+E/ssrxA9FKYgPV4PI/bwFSKGr6+48bAHKx7tXtOJIaybmjjRnUdBy0pIlCAdUd6QRwnzI6T7KxKTEWLeZnWmjiINl7YCJMA9I5nAv5ZWuCbSQxQ7pFObXOG6YIJ31sCqpCAxHpTtSlHowyDAFKVSU/TxA4W0FdsLfuaHidVArVdvt0xRbrlhA22Str3g0485tQg6o+wGEKig/KCgv7d4yaFZiCqAAJYUrJ8ObBmjnk2Bytfxya1FVjr3VieX3qYAKB4yEmhbU9DeqN1HQfuV2r3ek4gVEta/eFK1FKbW20xU0YtAz+1iAGrQXoFsD2u2Kc4FU/rZaSllYhf/D/VOIgnZQLEVSVmD7owqc+WtPhqD10KGAJoMp5wZFDQc1DFDQcaK1wEe/D90zuQEpcjU9kxxxjynnFLIPUpSmjJiopw83pG4FCa9fqrJH1NnyPj3p1nwsyVFQU1yFsbjObx5AUnFUhhR66jYEhW4ldQFSFGVOydXs8k25IF3aVnSNyQxIEa1CVSM5JMXYzO/OTIAUfic0P6zx1iPfpuB5VkC1wij0dTPllOAaSjKpSA2ooZ4u+9YoorcNM9cW0xTVLIAk9bgLo3pB1O5rLKhaRRZAtbCufthoCK3+JBVpK20tgA6Llq4V8nenniL8H5XroYkqoKgACZHhbtWzg1SrVVIFFS2gmv9xV622zMT7u7dWSQuotgoqmXon6blfqClSRV4toLCyXs/kNfd6axq1gKZVlWombWmzACloecqGT68g8FuAGioKB6RQ8WmbqEzstLNXTGwBakBagBYghR0JTZaCloKWgnwEloJ8/P4BP9/aWMUHMawAAAAASUVORK5CYII="
+                        />
                       </div>
-                    )}
-                    <img
-                      className="w-5 h-5  md:w-6 md:h-6"
-                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAAy5JREFUeF7tm2FSAyEMhclJ1JvoSdSTqCfRm9ib6E2i6UAHUiCprNtl5+0vx9Jd8vES4LGlgKtLgMCnTwCADIUAEACNFREoCAqCgsYIQEFj/C6qQcx8G0J4CSHchxDk75muQ+zsMxF9ezvuBsTMAuXTe+ONtxNIH54+ugBF5Xx5bjhRmzuPkryAJK1eJwre09UPInq2GnoBSWpJiu3pOhDRgxWQFxBbN5rxcyIy4zcbSODMDEA9BQCQkR8ABEBNAqhBS+zFkGJIMaRYjQDWQVZ9wUKxTwgK2oiCqrZB9I+ki48hhKdKX8XA6ppXyoMqntOZWb+J6C49r+djraUg01dhZgEklklyIYsgWgOtgnsgouQKyv5Q/Kmaq/n6G/hbBqhp1WwGUNzw5h11WQ0KkA78vaFMDbJp1VwFUJZaopLC+81GvQAUFXZTUZIoJKVn7TsCqbjyoC0n9FqAcmukNeo6WK8hp+uQTjNdfwTuGcREdAuApC+noKJSpMN/BVSY7ZU65K4/0rE9Aip8ZGbWdUjXn67Rt0dAWnn5UZROL6lf3ZOYmQDp6VqU0TokaNUhDc88iZkGkJ6JmLlXtHUdSm29y4DT4/YKSNehpJSL6s9sRVpSLE8zSbHm2b9a60gqvqvthVl/ZgPkXQel9NB1SACdTkl/92lm/dk7IF2HbvNVu1HDtlWDVDqkkf3rQjEF193LeT30LRTp1sp2FFCxQs9nQWv/lbe9FqB8c6k3q2llW1vw1YqybGBbb5UUs5bH3uhtbFuWyxLnYqYftJDdoWMo1JkBavlEZwyuoqDaSDRcPROs4602PZu5Zq/Vd/MNeaa1jViutW3D0XKN0231nUEHIPmeuIdyr+N6qJUqtf+vpaBL+rSptgBkDAcAAdBYxkJBUBAUNEYAChrjhxoEBUFBYwSgoDF+S9Ygt4Uw1uVVv+16BcfrB7VeNVk1ooUfVvWTzkw1z0OjjSknD7P9DLMXnulHHa0YDyBpE49SxE7dA6SqXVv1jLyAIiSBkw71ZgMl5poYa2+en2ImLm4FXQJyT20ByFor7Wm0/yMWKAgKGtMVFAQFQUFjBKCgMX4/Yd6TZ9aSIGoAAAAASUVORK5CYII="
-                    />
-                  </div>
-                  </div>
 
+                      <div className="flex items-center justify-center gap-[.4rem] w-full h-1/2  ">
+                        {coinDevHoldings.has(item.coinMint) ? (
+                          `${
+                            coinDevHoldings.get(item.coinMint)[0].devHoldings
+                          }%`
+                        ) : (
+                          <div className="w-4 h-4">
+                            <Spinner />
+                          </div>
+                        )}
+                        <img
+                          className="w-5 h-5  md:w-6 md:h-6"
+                          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAAy5JREFUeF7tm2FSAyEMhclJ1JvoSdSTqCfRm9ib6E2i6UAHUiCprNtl5+0vx9Jd8vES4LGlgKtLgMCnTwCADIUAEACNFREoCAqCgsYIQEFj/C6qQcx8G0J4CSHchxDk75muQ+zsMxF9ezvuBsTMAuXTe+ONtxNIH54+ugBF5Xx5bjhRmzuPkryAJK1eJwre09UPInq2GnoBSWpJiu3pOhDRgxWQFxBbN5rxcyIy4zcbSODMDEA9BQCQkR8ABEBNAqhBS+zFkGJIMaRYjQDWQVZ9wUKxTwgK2oiCqrZB9I+ki48hhKdKX8XA6ppXyoMqntOZWb+J6C49r+djraUg01dhZgEklklyIYsgWgOtgnsgouQKyv5Q/Kmaq/n6G/hbBqhp1WwGUNzw5h11WQ0KkA78vaFMDbJp1VwFUJZaopLC+81GvQAUFXZTUZIoJKVn7TsCqbjyoC0n9FqAcmukNeo6WK8hp+uQTjNdfwTuGcREdAuApC+noKJSpMN/BVSY7ZU65K4/0rE9Aip8ZGbWdUjXn67Rt0dAWnn5UZROL6lf3ZOYmQDp6VqU0TokaNUhDc88iZkGkJ6JmLlXtHUdSm29y4DT4/YKSNehpJSL6s9sRVpSLE8zSbHm2b9a60gqvqvthVl/ZgPkXQel9NB1SACdTkl/92lm/dk7IF2HbvNVu1HDtlWDVDqkkf3rQjEF193LeT30LRTp1sp2FFCxQs9nQWv/lbe9FqB8c6k3q2llW1vw1YqybGBbb5UUs5bH3uhtbFuWyxLnYqYftJDdoWMo1JkBavlEZwyuoqDaSDRcPROs4602PZu5Zq/Vd/MNeaa1jViutW3D0XKN0231nUEHIPmeuIdyr+N6qJUqtf+vpaBL+rSptgBkDAcAAdBYxkJBUBAUNEYAChrjhxoEBUFBYwSgoDF+S9Ygt4Uw1uVVv+16BcfrB7VeNVk1ooUfVvWTzkw1z0OjjSknD7P9DLMXnulHHa0YDyBpE49SxE7dA6SqXVv1jLyAIiSBkw71ZgMl5poYa2+en2ImLm4FXQJyT20ByFor7Wm0/yMWKAgKGtMVFAQFQUFjBKCgMX4/Yd6TZ9aSIGoAAAAASUVORK5CYII="
+                        />
+                      </div>
+                    </div>
 
-                  <div className="w-1/2 h-full flex flex-col justify-center items-center md:flex-row ">
-                  <div className="flex justify-center items-center w-full h-1/2 gap-[.4rem] text-xs">
-                    {" "}
-                    {coinDevHoldings.has(item.coinMint) &&
-                    !Number.isNaN(
-                      coinDevHoldings.get(item.coinMint)[1].bundlePercentHeld
-                    ) ? (
-                      `${
+                    <div className="w-1/2 h-full flex flex-col justify-center items-center md:flex-row ">
+                      <div className="flex justify-center items-center w-full h-1/2 gap-[.4rem] text-xs">
+                        {" "}
+                        {coinDevHoldings.has(item.coinMint) &&
                         !Number.isNaN(
-                          Math.round(
-                            coinDevHoldings.get(item.coinMint)[1]
-                              .bundlePercentHeld
-                          )
-                        )
-                          ? Math.round(
-                              coinDevHoldings.get(item.coinMint)[1]
-                                .bundlePercentHeld
+                          coinDevHoldings.get(item.coinMint)
+                            .bundlePercentHeld
+                        ) ? (
+                          `${
+                            !Number.isNaN(
+                              Math.round(
+                                coinDevHoldings.get(item.coinMint)
+                                  .bundlePercentHeld
+                              )
                             )
-                          : "0"
-                      }%`
-                    ) : (
-                      <div className="w-4 h-4">
-                        <Spinner />
+                              ? Math.round(
+                                  coinDevHoldings.get(item.coinMint)[1]
+                                    .bundlePercentHeld
+                                )
+                              : "0"
+                          }%`
+                        ) : (
+                          <div className="w-4 h-4">
+                            <Spinner />
+                          </div>
+                        )}
+                        <div className="md:w-[1.2rem] md:h-[1.2srem] items-center  ">
+                          <GrBundle className=" w-full h-full  " />
+                        </div>
                       </div>
-                    )}
-                    <div className="md:w-[1.2rem] md:h-[1.2srem] items-center  ">
-                      <GrBundle className=" w-full h-full  " />
+
+                      <div className=" flex items-center justify-center w-full  h-1/2  gap-[.4rem] ">
+                        {" "}
+                        {coinDevHoldings.has(item.coinMint) ? (
+                          coinDevHoldings.get(item.coinMint)
+                            .topTenPercentHeld == 0 ? (
+                            "0"
+                          ) : (
+                            `${Math.round(
+                              coinDevHoldings.get(item.coinMint)
+                                .topTenPercentHeld
+                            )}%`
+                          )
+                        ) : (
+                          <div className="w-4 h-4">
+                            <Spinner />
+                          </div>
+                        )}
+                        <div className="  md:w-[1.1rem] md:h-[1.3srem] bg-white border-[1px] rounded-[.15rem] items-center">
+                          <TbNumber10 className=" w-full h-full text-gray-500 p-[1px] " />{" "}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className=" flex items-center justify-center w-full  h-1/2  gap-[.4rem] ">
-                    {" "}
-                    {coinDevHoldings.has(item.coinMint) ? (
-                      coinDevHoldings.get(item.coinMint)[2].topTenPercentHeld ==
-                      0 ? (
-                        "0"
-                      ) : (
-                        `${Math.round(
-                          coinDevHoldings.get(item.coinMint)[2]
-                            .topTenPercentHeld
-                        )}%`
-                      )
-                    ) : (
-                      <div className="w-4 h-4">
-                        <Spinner />
-                      </div>
-                    )}
-                    <div className="  md:w-[1.1rem] md:h-[1.3srem] bg-white border-[1px] rounded-[.15rem] items-center">
-                      <TbNumber10 className=" w-full h-full text-gray-500 p-[1px] " />{" "}
-                    </div>
+                  <div className=" hidden overflow-hidden h-full i text-white text-ellipsis pr-4 justify-center text-sm w-[22rem] max-w-[22rem]  md:flex md:items-center ">
+                    <CopyToClipboardButton
+                      textToCopy={item.coinMint ?? "No Data"}
+                    />
+                    <p className="w-[90%] text-start text-ellipsis text-[11.5px] ">
+                      {item.coinMint}
+                    </p>
                   </div>
-                </div>
-                </div>
-
-
-
-
-                <div className=" hidden overflow-hidden h-full i text-white text-ellipsis pr-4 justify-center text-sm w-[22rem] max-w-[22rem]  md:flex md:items-center ">
-                  <CopyToClipboardButton
-                    textToCopy={item.coinMint ?? "No Data"}
-                  />
-                  <p className="w-[90%] text-start text-ellipsis text-[11.5px] ">
-                    {item.coinMint}
-                  </p>
-                </div>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
       </BlurFade>
     </main>
-   
   );
 }
