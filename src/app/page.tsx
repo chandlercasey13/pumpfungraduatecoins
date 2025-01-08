@@ -132,13 +132,13 @@ export default function Home() {
     <main className=" relative min-h-screen w-screen flex flex-col justify-center items-center bg-black/85 md:overflow-hidden">
    
      <BlurFade direction="up" className=" h-full w-screen flex flex-col justify-center items-center  md:overflow-hidden">
-      <h1 className="font-bold text-2xl pb-6  md:text-5xl md:pb-10 text-white">
+      <h1 className=" h-[10%]  font-bold text-2xl pb-6  md:text-5xl md:pb-10 text-white">
         Pump.Fun about to Graduate
       </h1>
       <div className=" h-full w-full flex justify-center relative  bg-white/30 backdrop-blur-sxl md:h-[50rem] max-w-[70rem]  md:rounded-lg md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
         <ul className=" h-full w-full flex flex-col ">
           {coins.length === 0 ? (
-            <li className="w-full h-screen flex justify-center items-center">
+            <li className="w-full h-[90vh] flex justify-center items-center">
               <div className="  w-40 h-40">
                 <Spinner />
               </div>
