@@ -61,6 +61,14 @@ export default function Home() {
     );
   };
 
+
+
+
+
+
+
+
+
   return (
     <main className=" relative min-h-screen w-screen flex flex-col justify-center items-center bg-black/85 md:overflow-hidden">
       <BlurFade
@@ -95,7 +103,7 @@ export default function Home() {
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   </div>
-                  <div className="flex flex-col h-full w-[20%] mr-4  md:text-base md:w-[20%] max-w-26 items-center justify-center text-xs text-white text-ellipsis">
+                  <div className="flex flex-col h-full w-[20%] mr-4  md:text-base md:w-[25%] max-w-[11rem] items-center justify-center text-xs text-white text-ellipsis">
                     <div className="w-full ">
                       <h1 className="font-semibold hidden sm:flex">
                         {item.ticker}
@@ -109,7 +117,7 @@ export default function Home() {
                   <div className="h-full w-[15%] md:max-w-[20%]">
                     <Chart />
                   </div>
-                  <div className="flex flex-col w-[25%]  h-full items-center justify-center text-sm md:text-base text-white ">
+                  <div className="flex flex-col w-[25%] max-w-[6rem]  h-full items-center justify-center text-sm md:text-base text-white ">
                     {item.marketCap ? (
                       <h1>
                         {Math.round(Number(item.marketCap)).toLocaleString()}
@@ -124,17 +132,25 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="flex flex-row h-full w-[40%] py-3 md:w-[30%] text-xs md:text-base text-[10px]  items-center justify-center md:gap-2 text-white text-ellipsis  ">
+                  <div className="flex flex-row h-full w-[40%] py-3 md:w-[35%] text-xs md:text-base text-[10px]  items-center justify-center md:gap-2 text-white text-ellipsis  ">
                     <div className="w-1/2 h-full flex flex-col justify-center items-center  md:flex-row ">
-                      <div className="flex justify-center items-center w-full h-1/2 md:w-[17%] gap-[.4rem] ">
+                      <div className={`flex justify-center items-center w-full h-1/2 md:w-1/2 gap-[.4rem] 
+                      ${item.numHolders && item.numHolders < 50 ? 'text-red-400' : '' } 
+                      ${item.numHolders && item.numHolders < 75 && item.numHolders>50 ? 'text-orange-300' : '' }
+                      ${item.numHolders && item.numHolders >75 ? 'text-green-300' : '' }
+                      `}>
                         <p className="flex items-center">{item.numHolders}</p>
                         <img
-                          className="  w-4 h-4  md:w-5 md:h-5 "
+                          className="  w-4 h-4  md:w-5 md:h-5  "
                           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAAAXNSR0IArs4c6QAAA7VJREFUeF7tmoFt3DAMRcVNmk2aSZpM0mSSpJMkmaS3CXs/sABDtShSFHUHQwYOl+BkWXr6JCWalNYlEqDFRyawADUUsgAtQD4nshR0zwpi5h8ppV8ppZ8pJfyNz2UbM77x+UNEnz4d9N99EwUx8+/rkF8MwwaodyJ6NdwzpOlUQMwMpXw4Rj4d1DRAHaqROL7MUtMUQMwM1UA9Iy+Y3PPIDo/6Cgc0WDnlHMKVFApI6XO+/coWrS5bZAMIKC5HOEkoz0SE+0OuaEB/t9B9NHiAweTEEL4Bg4liC3DYDxE9hNBJKYUBYuanlNJbZeCfRPSondQGCX3V/FiYiiIB1dRz6VnxhpK6+tQsUAighnoeW2ZVG3jDp3X3K4GKAgRzgImVl8m0jgYubBlCIloUoNq+x+0rBHW64U/bBzFzzf88EFE+jGpcwH9tNl+E/ssrxA9FKYgPV4PI/bwFSKGr6+48bAHKx7tXtOJIaybmjjRnUdBy0pIlCAdUd6QRwnzI6T7KxKTEWLeZnWmjiINl7YCJMA9I5nAv5ZWuCbSQxQ7pFObXOG6YIJ31sCqpCAxHpTtSlHowyDAFKVSU/TxA4W0FdsLfuaHidVArVdvt0xRbrlhA22Str3g0485tQg6o+wGEKig/KCgv7d4yaFZiCqAAJYUrJ8ObBmjnk2Bytfxya1FVjr3VieX3qYAKB4yEmhbU9DeqN1HQfuV2r3ek4gVEta/eFK1FKbW20xU0YtAz+1iAGrQXoFsD2u2Kc4FU/rZaSllYhf/D/VOIgnZQLEVSVmD7owqc+WtPhqD10KGAJoMp5wZFDQc1DFDQcaK1wEe/D90zuQEpcjU9kxxxjynnFLIPUpSmjJiopw83pG4FCa9fqrJH1NnyPj3p1nwsyVFQU1yFsbjObx5AUnFUhhR66jYEhW4ldQFSFGVOydXs8k25IF3aVnSNyQxIEa1CVSM5JMXYzO/OTIAUfic0P6zx1iPfpuB5VkC1wij0dTPllOAaSjKpSA2ooZ4u+9YoorcNM9cW0xTVLIAk9bgLo3pB1O5rLKhaRRZAtbCufthoCK3+JBVpK20tgA6Llq4V8nenniL8H5XroYkqoKgACZHhbtWzg1SrVVIFFS2gmv9xV622zMT7u7dWSQuotgoqmXon6blfqClSRV4toLCyXs/kNfd6axq1gKZVlWombWmzACloecqGT68g8FuAGioKB6RQ8WmbqEzstLNXTGwBakBagBYghR0JTZaCloKWgnwEloJ8/P4BP9/aWMUHMawAAAAASUVORK5CYII="
                         />
                       </div>
 
-                      <div className="flex items-center justify-center gap-[.4rem] w-full h-1/2  ">
+                      <div className={`flex items-center justify-center gap-[.4rem] w-full md:w-1/2 h-1/2 
+                      ${coinDevHoldings.has(item.coinMint) && coinDevHoldings.get(item.coinMint)[0].devHoldings > 40 ? 'text-red-400': ''}
+                      ${coinDevHoldings.has(item.coinMint) && coinDevHoldings.get(item.coinMint)[0].devHoldings > 20 &&  coinDevHoldings.get(item.coinMint)[0].devHoldings < 40? 'text-orange-300': ''}   
+                      ${coinDevHoldings.has(item.coinMint) && coinDevHoldings.get(item.coinMint)[0].devHoldings < 20 ? 'text-green-300': ''}
+                      `}>
                         {coinDevHoldings.has(item.coinMint) ? (
                           `${
                             coinDevHoldings.get(item.coinMint)[0].devHoldings
@@ -152,7 +168,13 @@ export default function Home() {
                     </div>
 
                     <div className="w-1/2 h-full flex flex-col justify-center items-center md:flex-row ">
-                      <div className="flex justify-center items-center w-full h-1/2 gap-[.4rem] text-xs">
+                      <div className={`flex justify-center items-center w-full h-1/2 gap-[.4rem]   ${coinDevHoldings.has(item.coinMint) && !Number.isNaN(coinDevHoldings.get(item.coinMint)[0].bundlePercentHeld) && coinDevHoldings.get(item.coinMint)[0].bundlePercentHeld > 50 ? 'text-red-400' : '' }
+
+${coinDevHoldings.has(item.coinMint) && !Number.isNaN(coinDevHoldings.get(item.coinMint)[0].bundlePercentHeld) && coinDevHoldings.get(item.coinMint)[0].bundlePercentHeld > 20 && coinDevHoldings.get(item.coinMint)[0].bundlePercentHeld < 50 ? 'text-orange-300' : '' }
+                      
+                      
+                      
+                      `}>
                         {" "}
                         {coinDevHoldings.has(item.coinMint) &&
                         !Number.isNaN(
@@ -175,11 +197,14 @@ export default function Home() {
                           </div>
                         )}
                         <div className="md:w-[1.2rem] md:h-[1.2srem] items-center  ">
-                          <GrBundle className=" w-full h-full  " />
+                          <GrBundle className=" w-full h-full text-white  " />
                         </div>
                       </div>
 
-                      <div className=" flex items-center justify-center w-full  h-1/2  gap-[.4rem] ">
+                      <div className={` flex items-center justify-center w-full  h-1/2  gap-[.4rem] ${coinDevHoldings.has(item.coinMint) &&  coinDevHoldings.get(item.coinMint)[0].topTenPercentHeld> 50 ?'text-red-400':''}
+                      ${coinDevHoldings.has(item.coinMint) &&  coinDevHoldings.get(item.coinMint)[0].topTenPercentHeld> 20 && coinDevHoldings.get(item.coinMint)[0].topTenPercentHeld<50 ?'text-orange-300':''}
+                       ${coinDevHoldings.has(item.coinMint) &&  coinDevHoldings.get(item.coinMint)[0].topTenPercentHeld< 20  ?'text-green-300':''}
+                      `}>
                         {" "}
                         {coinDevHoldings.has(item.coinMint) ? (
                           coinDevHoldings.get(item.coinMint)[0].topTenPercentHeld == 0 ? (
