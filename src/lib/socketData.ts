@@ -41,6 +41,7 @@ export function initializeSocketListeners(
 
 
   const handleData = (newMintList: Coin[]) => {
+   
     setCoins((prevCoins) => {
       const isOrderDifferent =
         prevCoins.length !== newMintList.length ||
@@ -71,7 +72,7 @@ export function initializeSocketListeners(
           topTenPercentHeld: holdings.tenHolderSupply,
         },
       ]);
-  
+console.log(newMap)
       return newMap;
     });
   };

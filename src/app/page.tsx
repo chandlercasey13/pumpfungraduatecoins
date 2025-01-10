@@ -156,19 +156,16 @@ export default function Home() {
                         {" "}
                         {coinDevHoldings.has(item.coinMint) &&
                         !Number.isNaN(
-                          coinDevHoldings.get(item.coinMint)
-                            .bundlePercentHeld
+                          coinDevHoldings.get(item.coinMint)[0].bundlePercentHeld
                         ) ? (
                           `${
                             !Number.isNaN(
                               Math.round(
-                                coinDevHoldings.get(item.coinMint)
-                                  .bundlePercentHeld
+                                coinDevHoldings.get(item.coinMint)[0]?.bundlePercentHeld
                               )
                             )
                               ? Math.round(
-                                  coinDevHoldings.get(item.coinMint)[1]
-                                    .bundlePercentHeld
+                                  coinDevHoldings.get(item.coinMint)[0].bundlePercentHeld
                                 )
                               : "0"
                           }%`
@@ -185,13 +182,11 @@ export default function Home() {
                       <div className=" flex items-center justify-center w-full  h-1/2  gap-[.4rem] ">
                         {" "}
                         {coinDevHoldings.has(item.coinMint) ? (
-                          coinDevHoldings.get(item.coinMint)
-                            .topTenPercentHeld == 0 ? (
+                          coinDevHoldings.get(item.coinMint)[0].topTenPercentHeld == 0 ? (
                             "0"
                           ) : (
                             `${Math.round(
-                              coinDevHoldings.get(item.coinMint)
-                                .topTenPercentHeld
+                              coinDevHoldings.get(item.coinMint)[0]?.topTenPercentHeld
                             )}%`
                           )
                         ) : (
