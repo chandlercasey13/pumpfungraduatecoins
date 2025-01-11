@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { ColorType, createChart } from 'lightweight-charts';
 
-const Chart = () => {
+const Chart = (price) => {
     const chartContainerRef = useRef(null);
     const chartRef = useRef(null); 
     useEffect(() => {
@@ -50,7 +50,7 @@ const Chart = () => {
         { time: '2023-01-02', open: 102, high: 110, low: 100, close: 108 },
         { time: '2023-01-03', open: 108, high: 115, low: 105, close: 110 },
         { time: '2023-01-04', open: 110, high: 120, low: 109, close: 118 },
-        { time: '2023-01-05', open: 118, high: 125, low: 115, close: 114 },
+        { time: '2023-01-05', open: 118, high: 125, low: 115, close: 130 },
        
     ]);
 

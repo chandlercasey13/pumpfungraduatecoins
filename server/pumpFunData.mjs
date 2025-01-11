@@ -135,6 +135,36 @@ const topTenHoldersSupply = async (coinMint) => {
   }
 };
 
+
+const setPriceStream = async (coinMint) => {
+  const url = `https://frontend-api-v2.pump.fun/candlesticks/${coinMint}?offset=0&limit=60&timeframe=1`;
+
+  
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    console.log(data)
+   
+  } catch (err) {
+    console.error("Error in finding Price Data:", err);
+  }
+}
+
+
+
+
+
 const cacheCoins = async (data, socket) => {
   if (!Array.isArray(data)) {
     console.error("cacheCoins: Input data must be an array.");
@@ -155,13 +185,15 @@ const cacheCoins = async (data, socket) => {
           const bundleSupply = await findBundleHoldings(coin.coinMint);
           const ownerHoldings = await findOwnerHoldings(
             coin.dev,
-            coin.coinMint
-          );
+            coin.coinMint);
           const tenHolderSupply = await topTenHoldersSupply(coin.coinMint);
+          
+          setInterval(async () => await setPriceStream(coin.coinMint), 5000)
 
           coin.bundleSupply = bundleSupply;
           coin.ownerHoldings = ownerHoldings;
           coin.tenHolderSupply = tenHolderSupply;
+          coin.intervalID = 
 
           coinCache.set(coin.coinMint, coin);
 
@@ -170,6 +202,7 @@ const cacheCoins = async (data, socket) => {
             devHoldings: ownerHoldings,
             bundleSupply: bundleSupply,
             tenHolderSupply: tenHolderSupply,
+            intervalID: intervalID
           });
         } catch (error) {
           console.error(`Error processing coin ${coin.coinMint}:`, error);
