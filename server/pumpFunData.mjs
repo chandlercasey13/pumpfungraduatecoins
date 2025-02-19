@@ -22,7 +22,7 @@ export const sendCachedCoins = (socket) => {
 };
 
 export const aboutToGraduateCoins = async (socket, solSocket) => {
-  const url = "https://advanced-api.pump.fun/coins/about-to-graduate";
+  const url = "https://advanced-api-v3.pump.fun/coins/about-to-graduate";
 
   try {
     const response = await fetch(url, {
@@ -193,7 +193,7 @@ const cacheCoins = async (data, socket) => {
           coin.bundleSupply = bundleSupply;
           coin.ownerHoldings = ownerHoldings;
           coin.tenHolderSupply = tenHolderSupply;
-          coin.intervalID = 
+          
 
           coinCache.set(coin.coinMint, coin);
 
@@ -202,7 +202,7 @@ const cacheCoins = async (data, socket) => {
             devHoldings: ownerHoldings,
             bundleSupply: bundleSupply,
             tenHolderSupply: tenHolderSupply,
-            intervalID: intervalID
+            
           });
         } catch (error) {
           console.error(`Error processing coin ${coin.coinMint}:`, error);

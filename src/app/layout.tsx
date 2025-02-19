@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
+import DataStack from "../components/ui/dataStack"
+import Moon from "../components/ui/Moon"
+import Chevron from "@/components/ui/Chevron";
+
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -24,9 +29,30 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+     <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
+        <nav className="navbar">
+        <div className="title-content-container"> 
+        <DataStack color={'#53A4FC'}/>
+        <h1 className="title">PumpData</h1>
+        <p className="title-subtext">Developer Docs</p>
+        </div>
+        <Moon color={"white"}/>
+        </nav>
+        <section className="sidebar">
+        <div className="sidebar-items">
+          Welcome
+          <Chevron color="white"/>
+        </div>
+        <div className="sidebar-items">
+          Coin Dashboard
+          <Chevron color="white"/>
+        </div>
+        <div className="sidebar-items">
+          Coin Data API
+          <Chevron color="white"/>
+        </div>  
+
+        </section>
         {children}
       </body>
     </html>
