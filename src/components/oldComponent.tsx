@@ -7,13 +7,16 @@ import { initializeSocketListeners } from "../lib/socketData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Chart from "../components/tvChart";
 import Spinner from "../components/ui/Spinner";
-import { GrBundle } from "react-icons/gr";
-import { TbNumber10 } from "react-icons/tb";
-import { FaDev } from "react-icons/fa";
-import { CiUser } from "react-icons/ci";
+
+import 'ldrs/grid'
+import { grid } from 'ldrs'
+import type {} from 'ldrs'
+
+
+
 
 import { usePathname } from "next/navigation";
-import BlurFade from "@/components/ui/blur-fade";
+
 
 
 
@@ -33,15 +36,23 @@ export interface Coin {
   [key: string]: string | number | undefined;
 }
 
+grid.register();
+
 export default function OldComponent() {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
   const [changedCoins, setChangedCoins] = useState<string[]>([]);
 
+
+
+
   const pathname = usePathname();
   
   useEffect(() => {
+    
+
     if (pathname === "/dashboard") {
+      
      
       const cleanup = initializeSocketListeners(
         setCoins,
@@ -81,32 +92,41 @@ export default function OldComponent() {
     );
   };
 
+  
   return(
-     
-      <BlurFade
-        direction="up"
-        className="  md:overflow-hidden"
-      >
-        {coins.length != 0 && (<h1 className="pl-4 pb-2">Data Dashboard</h1>)}
-        <div className=" h-full w-full flex justify-center relative   backdrop-blur-sxl md:h-[50rem] max-w-[80rem]  md:rounded-lg md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
+
+     <>
+        {coins.length != 0 && (<h1 className="text-3xl mt-2 mb-1 pl-4">Data Dashboard</h1>)}
+        <div className=" h-full w-full flex justify-center relative    pb-2 backdrop-blur-sxl md:h-[50rem] max-w-[80rem]   md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
           <ul className=" h-full w-full flex flex-col ">
             {coins.length === 0 ? (
               <li className="w-full h-[90vh] flex justify-center items-center">
-                <div className="  w-40 h-40">
-                  <Spinner />
+                <div className=" flex justify-center items-center  w-40 h-40">
+                
+                  <l-grid
+                    size="150"
+                    speed="1.5" 
+                    color="#53A4FC" 
+                  ></l-grid>
                 </div>
               </li>
             ) : (
-              coins.map((item, index) => (
-                <li
+              
+            <> 
+            <div className=" flex w-full min-h-6 pt-3 pb-7 text-white/30 font-extralight"><p className="absolute left-5">Name</p><p className="absolute left-[35.5%]">Marketcap</p>
+            <p className="absolute left-[20.5%]">Price</p>
+            <p className="absolute left-[44%]"> Holders</p><p className="absolute left-[52%]"> Dev %</p><p className="absolute left-[59%]"> Bundled %</p>
+            <p className="absolute left-[67%]">Top 10 %</p><p className="absolute left-[74.75%]">Mint</p></div>
+              {coins.map((item, index) => (
+                <li 
                   key={index}
                   className={`${
                     changedCoins.includes(item.coinMint) ? "highlight" : ""
-                  }  relative w-full min-h-[6rem] h-[6rem]   md:min-h-[5rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
+                  }  relative w-full min-h-[6rem] h-[6rem]   md:min-h-[4.8rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
                 >
                   <div
                     className=" w-12 
-                 h-full flex justify-center items-center mr-2 pl-2 md:pl-4 md:w-20 "
+                 h-full flex justify-center items-center  md:w-20 "
                   >
                     <Avatar>
                       <AvatarImage src={item.imageUrl} />
@@ -124,7 +144,7 @@ export default function OldComponent() {
                     </div>
                   </div>
 
-                  <div className="h-full w-[15%] md:max-w-[20%]">
+                  <div className="h-full py-3 w-[15%] md:max-w-[20%]">
                     <Chart />
                   </div>
                   <div className="flex flex-col w-[25%] max-w-[6rem]  h-full items-center justify-center text-sm md:text-base text-white ">
@@ -167,7 +187,7 @@ export default function OldComponent() {
                       >
                         <p className="flex items-center">{item.numHolders}</p>
 
-                        <CiUser className="  w-4 h-4  md:w-5 md:h-5  " />
+                        {/* <CiUser className="  w-4 h-4  md:w-5 md:h-5  " /> */}
                       </div>
 
                       <div
@@ -203,7 +223,7 @@ export default function OldComponent() {
                             <Spinner />
                           </div>
                         )}
-                        <FaDev className="w-5 h-5  md:w-4 md:h-6" />
+                        {/* <FaDev className="w-5 h-5  md:w-4 md:h-6" /> */}
                       </div>
                     </div>
 
@@ -267,7 +287,7 @@ ${
                           </div>
                         )}
                         <div className="md:w-[1.2rem] md:h-[1.2srem] items-center  ">
-                          <GrBundle className=" w-full h-full   " />
+                          {/* <GrBundle className=" w-full h-full   " /> */}
                         </div>
                       </div>
 
@@ -315,34 +335,13 @@ ${
                           </div>
                         )}
                         <div
-                          className={`  md:w-[1.1rem] md:h-[1.3srem] bg-white border-[1px]  rounded-[.15rem] items-center  ${
-                            coinDevHoldings.has(item.coinMint) &&
-                            coinDevHoldings.get(item.coinMint)[0]
-                              .topTenPercentHeld > 50
-                              ? "border-red-400 bg-red-400 "
-                              : ""
-                          } 
-                         ${
-                           coinDevHoldings.has(item.coinMint) &&
-                           coinDevHoldings.get(item.coinMint)[0]
-                             .topTenPercentHeld > 20 &&
-                           coinDevHoldings.get(item.coinMint)[0]
-                             .topTenPercentHeld < 50
-                             ? "bg-orange-300 border-orange-300"
-                             : ""
-                         }
-                          ${
-                            coinDevHoldings.has(item.coinMint) &&
-                            coinDevHoldings.get(item.coinMint)[0]
-                              .topTenPercentHeld < 20
-                              ? "text-green-300 bg-green-300"
-                              : ""
-                          }
+                          className={`  md:w-[1.1rem] md:h-[1.3srem] bg-white   rounded-[.15rem] items-center  
+                           
                         `}
                         >
-                          <TbNumber10
+                          {/* <TbNumber10
                             className={` w-full h-full text-neutral-500 p-[1px]      `}
-                          />{" "}
+                          /> */}
                         </div>
                       </div>
                     </div>
@@ -357,11 +356,18 @@ ${
                     </p>
                   </div>
                 </li>
-              ))
-            )}
+              ))}
+
+              </>
+            )
+            
+          
+            }
+            
           </ul>
         </div>
-      </BlurFade>
-   
+  
+   </>
   );
+  
 }

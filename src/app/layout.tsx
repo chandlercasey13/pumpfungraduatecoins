@@ -32,6 +32,11 @@ export default function RootLayout({
     <html lang="en">
      
      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
+     <script
+          type="module"
+          defer
+          src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/grid.js"
+        ></script>
      <header className="header">
         <div className="title-content-container"> 
         <DataStack color={'#53A4FC'}/>
@@ -50,10 +55,10 @@ export default function RootLayout({
           Coin Dashboard
           <Chevron color="white"/>
         </Link>
-        <div className="sidebar-items">
+        <Link href={'/endpoint'} className="sidebar-items">
           Coin Data API
           <Chevron color="white"/>
-        </div>  
+        </Link>  
 
         </nav>
         

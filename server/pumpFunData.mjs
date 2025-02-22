@@ -108,7 +108,7 @@ const findBundleHoldings = async (coinMint) => {
 
   } catch (err) {
     console.error("Error in findBundleHoldings:", err);
-    return null; // Ensure function always returns something
+    return null; 
   }
 };
 
