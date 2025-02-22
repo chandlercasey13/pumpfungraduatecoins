@@ -1,4 +1,4 @@
-import { io } from "socket.io-client";
+import { socket } from "../socket";
 import { Coin } from "../components/oldComponent";
 
 interface Holdings {
@@ -17,7 +17,7 @@ interface CoinHoldings {
 type CoinDevHoldingsMap = Map<string, CoinHoldings[]>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-let socket: any = null; 
+
 
 export function initializeSocketListeners(
   setCoins: React.Dispatch<React.SetStateAction<Coin[]>>,
@@ -28,7 +28,6 @@ export function initializeSocketListeners(
     socket.disconnect();
   }
 
-  socket = io("http://localhost:3000");
 
   socket.on("connect", () => {});
 
