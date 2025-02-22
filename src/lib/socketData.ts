@@ -1,3 +1,5 @@
+"use client"
+
 import { socket } from "../socket"; 
 import { Coin } from "../components/oldComponent";
 
