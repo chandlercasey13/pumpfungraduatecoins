@@ -1,4 +1,4 @@
-import { socket } from "../socket";
+import { socket } from "../socket"; 
 import { Coin } from "../components/oldComponent";
 
 interface Holdings {
@@ -16,26 +16,29 @@ interface CoinHoldings {
 
 type CoinDevHoldingsMap = Map<string, CoinHoldings[]>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-
 export function initializeSocketListeners(
   setCoins: React.Dispatch<React.SetStateAction<Coin[]>>,
   setChangedCoins: React.Dispatch<React.SetStateAction<string[]>>,
   setCoinDevHoldings: React.Dispatch<React.SetStateAction<CoinDevHoldingsMap>>
 ) {
-  if (socket) {
-    socket.disconnect();
+  if (!socket.connected) {
+    console.log("🔹 Connecting socket...");
+    socket.connect();
+  } else {
+    console.log("⚡ Socket already connected");
   }
 
-
-  socket.on("connect", () => {});
+  socket.on("connect", () => {
+    console.log("✅ Socket connected successfully");
+  });
 
   socket.on("data", (newMintList: Coin[]) => {
+    console.log("🔹 Received Data:", newMintList);
     handleData(newMintList);
   });
 
   socket.on("holdings", (holdings: Holdings) => {
+    console.log("🔹 Received Holdings:", holdings);
     handleHoldings(holdings);
   });
 
@@ -88,8 +91,8 @@ export function initializeSocketListeners(
   };
 
   return () => {
+    console.log("🔴 Cleaning up socket connection...");
     socket.off("data", handleData);
     socket.off("holdings", handleHoldings);
-    socket.disconnect();
   };
 }

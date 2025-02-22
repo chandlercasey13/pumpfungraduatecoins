@@ -39,6 +39,7 @@ export default function OldComponent() {
   const [changedCoins, setChangedCoins] = useState<string[]>([]);
 
   const pathname = usePathname();
+  
   useEffect(() => {
     if (pathname === "/dashboard") {
      
