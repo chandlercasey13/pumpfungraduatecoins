@@ -22,7 +22,7 @@ export const sendCachedCoins = (socket) => {
 };
 
 export const aboutToGraduateCoins = async (socket, solSocket) => {
-  const url = "https://advanced-api-v3.pump.fun/coins/about-to-graduate";
+  const url = "https://advanced-api-v2.pump.fun/coins/about-to-graduate";
 
   try {
     const response = await fetch(url, {
@@ -136,30 +136,30 @@ const topTenHoldersSupply = async (coinMint) => {
 };
 
 
-const setPriceStream = async (coinMint) => {
-  const url = `https://frontend-api-v2.pump.fun/candlesticks/${coinMint}?offset=0&limit=60&timeframe=1`;
+// const setPriceStream = async (coinMint) => {
+//   const url = `https://frontend-api-v2.pump.fun/candlesticks/${coinMint}?offset=0&limit=60&timeframe=1`;
 
   
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+//   try {
+//     const response = await fetch(url, {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! Status: ${response.status}`);
+//     }
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    console.log(data)
+//     console.log(data)
    
-  } catch (err) {
-    console.error("Error in finding Price Data:", err);
-  }
-}
+//   } catch (err) {
+//     console.error("Error in finding Price Data:", err);
+//   }
+// }
 
 
 
