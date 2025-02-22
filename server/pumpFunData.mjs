@@ -47,7 +47,7 @@ export const aboutToGraduateCoins = async (socket, solSocket) => {
 };
 
 const findOwnerHoldings = async (coinDev, coinMint) => {
-  const url = `https://frontend-api-v2.pump.fun/balances/${coinDev}?limit=50&offset=0&minBalance=-1`;
+  const url = `https://frontend-api-v3.pump.fun/balances/${coinDev}?limit=50&offset=0&minBalance=-1`;
 
   try {
     const response = await fetch(url, {
@@ -79,31 +79,42 @@ const findOwnerHoldings = async (coinDev, coinMint) => {
 };
 
 const findBundleHoldings = async (coinMint) => {
-  const url = `https://trench.bot/api/bundle_advanced/${coinMint}`;
+
+  const url = `https://trench.bot/api/bundle/bundle_advanced/${coinMint}`;
 
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "*/*",
       },
     });
 
     if (!response.ok) {
+      const errorMessage = await response.text();
+      console.error(`HTTP error! Status: ${response.status}, Message: ${errorMessage}`);
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const data = await response.json();
-    if (data.total_percentage_bundled) {
+    
+    if (data.total_percentage_bundled !== undefined) {
       return data.total_percentage_bundled;
+    } else {
+      console.warn("total_percentage_bundled is missing in API response.");
+      return null;
     }
+
   } catch (err) {
-    console.error("Error in findOwnerHoldings:", err);
+    console.error("Error in findBundleHoldings:", err);
+    return null; // Ensure function always returns something
   }
 };
 
+
 const topTenHoldersSupply = async (coinMint) => {
-  const url = `https://advanced-api.pump.fun/coins/list?sortBy=marketCap`;
+  const url = `https://advanced-api-v2.pump.fun/coins/list?sortBy=marketCap`;
 
   try {
     const response = await fetch(url, {
@@ -188,7 +199,7 @@ const cacheCoins = async (data, socket) => {
             coin.coinMint);
           const tenHolderSupply = await topTenHoldersSupply(coin.coinMint);
           
-          setInterval(async () => await setPriceStream(coin.coinMint), 5000)
+         // setInterval(async () => await setPriceStream(coin.coinMint), 5000)
 
           coin.bundleSupply = bundleSupply;
           coin.ownerHoldings = ownerHoldings;
