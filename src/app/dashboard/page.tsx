@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+
 import OldComponent from "@/components/oldComponent";
 
 export default function Dashboard() {

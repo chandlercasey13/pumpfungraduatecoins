@@ -12,7 +12,13 @@ import { TbNumber10 } from "react-icons/tb";
 import { FaDev } from "react-icons/fa";
 import { CiUser } from "react-icons/ci";
 
+import { usePathname } from "next/navigation";
 import BlurFade from "@/components/ui/blur-fade";
+
+
+
+
+
 
 export interface Coin {
   chainId: string;
@@ -32,15 +38,27 @@ export default function OldComponent() {
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
   const [changedCoins, setChangedCoins] = useState<string[]>([]);
 
+  const pathname = usePathname();
   useEffect(() => {
-    const cleanup = initializeSocketListeners(
-      setCoins,
-      setChangedCoins,
-      setCoinDevHoldings
-    );
+    if (pathname === "/dashboard") {
+     
+      const cleanup = initializeSocketListeners(
+        setCoins,
+        setChangedCoins,
+        setCoinDevHoldings
+      );
 
-    return () => cleanup();
-  }, []);
+      return () => {
+        cleanup();
+      };
+    }
+  }, [pathname]); 
+
+  if (pathname !== "/dashboard") return null;
+
+
+
+
 
   interface CopyToClipboardButtonProps {
     textToCopy: string;
@@ -62,22 +80,13 @@ export default function OldComponent() {
     );
   };
 
-  return (
-
-
-
-
-
-    
-    
-     
-     
+  return(
      
       <BlurFade
         direction="up"
         className="  md:overflow-hidden"
       >
-        {coins.length != 0 && (<h1 className="welcome-content-header pl-4 pb-2">Data Dashboard</h1>)}
+        {coins.length != 0 && (<h1 className="pl-4 pb-2">Data Dashboard</h1>)}
         <div className=" h-full w-full flex justify-center relative   backdrop-blur-sxl md:h-[50rem] max-w-[80rem]  md:rounded-lg md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
           <ul className=" h-full w-full flex flex-col ">
             {coins.length === 0 ? (
