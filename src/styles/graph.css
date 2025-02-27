@@ -1,0 +1,37 @@
+.graphiql-container {
+  background-color: #2A2A2C !important;
+  color: #ffcc00 !important; 
+  height: 500px !important;
+}
+
+.graphiql-editor{
+  background-color: #2A2A2C !important;
+  border-radius: 10px;
+}
+
+.graphiql-execute-button{
+  background: #53A4FC !important;
+}
+
+.graphiql-query-editor{
+  border-radius: 15px;
+  background-color: #2A2A2C !important;
+}
+.graphiql-horizontal-drag-bar{
+background-color: transparent !important ;
+}
+
+.result-window{
+height: 700px  !important;
+
+
+}
+.CodeMirror-scroll{
+  background-color: transparent !important;
+}
+.CodeMirror-gutters{
+  background-color: transparent !important;
+}
+#graphiql-session > div:nth-child(1) > div > div:nth-child(1) > section > div.graphiql-editor > div{
+  background-color: transparent !important;
+}

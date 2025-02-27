@@ -17,6 +17,7 @@ body {
   flex-direction: column;
   justify-content: start;
   align-items: start;
+  overflow-x: hidden;
   
 
 }
@@ -101,6 +102,7 @@ padding: 10px 10px 0px 10px;
   color: white;
   padding: 7px 15px;
   height: 50px;
+  width: 100%;
   transition: background-color 0.3s ease-in-out; 
 }
 
@@ -114,7 +116,6 @@ padding: 10px 10px 0px 10px;
   width: calc(100vw - 300px);
   height: 100%;
   padding: 60px 35% 0px 60px;
-
   color: white;
 }
 
@@ -130,6 +131,18 @@ padding: 10px 10px 0px 10px;
   line-height: 2;
 }
 
+
+.api-tester-main-content{
+display: flex;
+flex-direction: column;
+color: white;
+width: calc(100vw - 300px);
+padding: 10px 35% 0px 60px;
+}
+
+
+
+
 .next-button {
   display: flex;
   flex-direction: column;
@@ -142,7 +155,9 @@ padding: 10px 10px 0px 10px;
   border: 1px solid rgba(255, 255, 255, 0.4);
   padding: 20px 15px;
 }
-
+.next-button:hover{
+  border-color: #53A4FC;
+}
 
 .highlight {
   animation: bgHighlight .5s ease-in-out;
@@ -230,3 +245,6 @@ a {
     @apply bg-background text-foreground;
   }
 }
+
+
+

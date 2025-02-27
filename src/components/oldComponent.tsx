@@ -1,4 +1,5 @@
 "use client";
+// @ts-nocheck
 
 import { useEffect, useState } from "react";
 
@@ -12,7 +13,7 @@ import 'ldrs/grid'
 import { grid } from 'ldrs'
 import type {} from 'ldrs'
 
-
+import BlurFade from "@/components/ui/blur-fade";
 
 
 import { usePathname } from "next/navigation";
@@ -98,21 +99,19 @@ export default function OldComponent() {
      <>
         {coins.length != 0 && (<h1 className="text-3xl mt-2 mb-1 pl-4">Data Dashboard</h1>)}
         <div className=" h-full w-full flex justify-center relative    pb-2 backdrop-blur-sxl md:h-[50rem] max-w-[80rem]   md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
-          <ul className=" h-full w-full flex flex-col ">
+          <ul className=" h-full w-full flex flex-col max-h-calc(100vh - 70px) ">
             {coins.length === 0 ? (
               <li className="w-full h-[90vh] flex justify-center items-center">
                 <div className=" flex justify-center items-center  w-40 h-40">
-                
-                  <l-grid
-                    size="150"
-                    speed="1.5" 
-                    color="#53A4FC" 
-                  ></l-grid>
+                <l-grid size="150" speed="1.5" color="#53A4FC" />
                 </div>
               </li>
             ) : (
               
-            <> 
+              <BlurFade
+              direction="up"
+              className="md:overflow-hidden"
+            >
             <div className=" flex w-full min-h-6 pt-3 pb-7 text-white/30 font-extralight"><p className="absolute left-5">Name</p><p className="absolute left-[35.5%]">Marketcap</p>
             <p className="absolute left-[20.5%]">Price</p>
             <p className="absolute left-[44%]"> Holders</p><p className="absolute left-[52%]"> Dev %</p><p className="absolute left-[59%]"> Bundled %</p>
@@ -122,7 +121,7 @@ export default function OldComponent() {
                   key={index}
                   className={`${
                     changedCoins.includes(item.coinMint) ? "highlight" : ""
-                  }  relative w-full min-h-[6rem] h-[6rem]   md:min-h-[4.8rem] pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
+                  }  relative w-full min-h-[4.45rem] h-[4.45rem]    pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
                 >
                   <div
                     className=" w-12 
@@ -358,7 +357,7 @@ ${
                 </li>
               ))}
 
-              </>
+            </BlurFade>
             )
             
           

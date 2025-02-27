@@ -207,6 +207,7 @@ const cacheCoins = async (data, socket) => {
           
 
           coinCache.set(coin.coinMint, coin);
+          console.log(coinCache)
 
           socket.emit("holdings", {
             coinMint: coin.coinMint,

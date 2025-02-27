@@ -9,9 +9,9 @@ export default function Home() {
     <>
     <BlurFade direction="up">
     <section className="main-content">
-      <h1 className="welcome-content-header">What is PumpData?</h1>
+      <h1 className="welcome-content-header">What is pump.data?</h1>
       <p className="welcome-content-paragraph">
-        <span className="text-ablue-400 font-medium">
+        <span className="text-blue-400 font-medium">
           Data & Transparency Hub
         </span> for Pump.fun and Similar Platforms. We provide real-time insights and
         analytics to bring clarity to the often opaque world of trading on sites
