@@ -6,7 +6,7 @@ const DataStack = ({ color }: { color: string }) => {
       role="img"
       viewBox="0 0 24 24"
       strokeWidth={0}
-      height="50px"
+      height="35px"
       width="50px"
       xmlns="http://www.w3.org/2000/svg"
     >

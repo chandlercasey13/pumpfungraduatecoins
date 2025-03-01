@@ -1,5 +1,13 @@
 "use client";
 
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 import Link from "next/link";
 import BlurFade from "@/components/ui/blur-fade"
@@ -9,6 +17,24 @@ export default function Home() {
     <>
     <BlurFade direction="up">
     <section className="main-content">
+    <Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+    Home    
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbItem>
+    Welcome    
+    </BreadcrumbItem>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>What is pump.data?</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+ 
       <h1 className="welcome-content-header">What is pump.data?</h1>
       <p className="welcome-content-paragraph">
         <span className="text-blue-400 font-medium">

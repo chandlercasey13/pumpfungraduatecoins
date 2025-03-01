@@ -9,20 +9,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Chart from "../components/tvChart";
 import Spinner from "../components/ui/Spinner";
 
-import 'ldrs/grid'
-import { grid } from 'ldrs'
-import type {} from 'ldrs'
+import "ldrs/grid";
+import { grid } from "ldrs";
+import type {} from "ldrs";
 
 import BlurFade from "@/components/ui/blur-fade";
 
-
 import { usePathname } from "next/navigation";
-
-
-
-
-
-
 
 export interface Coin {
   chainId: string;
@@ -44,17 +37,10 @@ export default function OldComponent() {
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
   const [changedCoins, setChangedCoins] = useState<string[]>([]);
 
-
-
-
   const pathname = usePathname();
-  
-  useEffect(() => {
-    
 
+  useEffect(() => {
     if (pathname === "/dashboard") {
-      
-     
       const cleanup = initializeSocketListeners(
         setCoins,
         setChangedCoins,
@@ -65,13 +51,9 @@ export default function OldComponent() {
         cleanup();
       };
     }
-  }, [pathname]); 
+  }, [pathname]);
 
   if (pathname !== "/dashboard") return null;
-
-
-
-
 
   interface CopyToClipboardButtonProps {
     textToCopy: string;
@@ -93,46 +75,48 @@ export default function OldComponent() {
     );
   };
 
-  
-  return(
-
-     <>
-        {coins.length != 0 && (<h1 className="text-3xl mt-2 mb-1 pl-4">Data Dashboard</h1>)}
-        <div className=" h-full w-full flex justify-center relative    pb-2 backdrop-blur-sxl md:h-[50rem] max-w-[80rem]   md:overflow-y-hidden scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
-          <ul className=" h-full w-full flex flex-col max-h-calc(100vh - 70px) ">
-            {coins.length === 0 ? (
-              <li className="w-full h-[90vh] flex justify-center items-center">
-                <div className=" flex justify-center items-center  w-40 h-40">
+  return (
+    <>
+      {coins.length != 0 && (
+        <h1 className="welcome-content-header ">Data Dashboard</h1>
+      )}
+      <div className=" custom-scroll-container max-h-[50rem] w-full flex justify-center relative  pb-2 backdrop-blur-xl  max-w-[85rem]    scrollbar-thin  scrollbar-thumb-white scrollbar-track-transparent scrollbar-thumb-rounded">
+        <ul className="w-full flex flex-col ">
+          {coins.length === 0 ? (
+            <li className="w-full h-[90vh] flex justify-center items-center">
+              <div className=" flex justify-center items-center  w-40 h-40">
                 <l-grid size="150" speed="1.5" color="#53A4FC" />
-                </div>
-              </li>
-            ) : (
-              
-              <BlurFade
-              direction="up"
-              className="md:overflow-hidden"
-            >
-            <div className=" flex w-full min-h-6 pt-3 pb-7 text-white/30 font-extralight"><p className="absolute left-5">Name</p><p className="absolute left-[35.5%]">Marketcap</p>
-            <p className="absolute left-[20.5%]">Price</p>
-            <p className="absolute left-[44%]"> Holders</p><p className="absolute left-[52%]"> Dev %</p><p className="absolute left-[59%]"> Bundled %</p>
-            <p className="absolute left-[67%]">Top 10 %</p><p className="absolute left-[74.75%]">Mint</p></div>
+              </div>
+            </li>
+          ) : (
+            <BlurFade direction="up" className="md:overflow-auto">
+              <div className=" z-20 bg-bgColor flex w-full min-h-6 pt-3 pb-7 text-white/30 font-extralight sticky top-0">
+                <p className="absolute left-1">Name</p>
+                <p className="absolute left-[33.75%]">Marketcap</p>
+                <p className="absolute left-[18.5%]">Price</p>
+                <p className="absolute left-[42.5%]"> Holders</p>
+                <p className="absolute left-[50.75%]"> Dev %</p>
+                <p className="absolute left-[58%]"> Bundled %</p>
+                <p className="absolute left-[66%]">Top 10 %</p>
+                <p className="absolute left-[73.75%]">Mint</p>
+              </div>
               {coins.map((item, index) => (
-                <li 
+                <li
                   key={index}
                   className={`${
                     changedCoins.includes(item.coinMint) ? "highlight" : ""
-                  }  relative w-full min-h-[4.45rem] h-[4.45rem]    pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
+                  }  relative w-full min-h-[4.9rem] h-[6.5rem]    pr-1 flex items-center justify-around md:justify-start  border-b-[1px] border-black/10   `}
                 >
                   <div
                     className=" w-12 
-                 h-full flex justify-center items-center  md:w-20 "
+                 h-full flex justify-center items-center "
                   >
                     <Avatar>
                       <AvatarImage src={item.imageUrl} />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   </div>
-                  <div className="flex flex-col h-full w-[20%] mr-4  md:text-base md:w-[25%] max-w-[11rem] items-center justify-center text-xs text-white text-ellipsis">
+                  <div className="flex flex-col h-full w-[20%] pl-4 mr-4  md:text-base md:w-[25%] max-w-[11rem] items-center justify-center text-xs text-white text-ellipsis">
                     <div className="w-full ">
                       <h1 className="font-semibold hidden sm:flex">
                         {item.ticker}
@@ -356,17 +340,10 @@ ${
                   </div>
                 </li>
               ))}
-
             </BlurFade>
-            )
-            
-          
-            }
-            
-          </ul>
-        </div>
-  
-   </>
+          )}
+        </ul>
+      </div>
+    </>
   );
-  
 }

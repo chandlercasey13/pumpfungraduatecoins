@@ -51,7 +51,7 @@ export default function RootLayout({
     {
       title: "Data API",
       subOptions: [
-        { label: "Getting Started", href: "/endpoint" },
+        { label: "Getting Started", href: "/docs" },
         { label: "API Playground", href: "/endpoint" }
        
       ],
@@ -68,7 +68,7 @@ export default function RootLayout({
         ></script>
      <header className="header">
         <div className="title-content-container"> 
-        <DataStack color={'#53A4FC'}/>
+        <DataStack  color={'#53A4FC'}/>
         <h1 className="title">pump.data</h1>
         <p className="title-subtext">Developer Docs</p>
         </div>

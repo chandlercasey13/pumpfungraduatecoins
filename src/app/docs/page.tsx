@@ -1,6 +1,8 @@
+"use client"
 
 import BlurFade from "@/components/ui/blur-fade"
-import GraphQl from"@/components/GraphiQLTester"
+import CodeEditor from "@/components/CodeEditor"
+import { Code } from "lucide-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,8 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-
-export default function Endpoint() {
+export default function Docs() {
 
 
 
@@ -35,7 +36,7 @@ return(
     </BreadcrumbItem>
   </BreadcrumbList>
 </Breadcrumb>
-   <h1 className="welcome-content-header"> API playground</h1>
+   <h1 className="welcome-content-header"> Getting Started</h1>
    <p className="welcome-content-paragraph">
     To get a transaction for signing and sending with a custom RPC, send a POST request to
     https://pumpportal.fun/api/trade-local
@@ -45,7 +46,8 @@ return(
     mint: The contract address of the token you want to trade
 
       </p>
-   <GraphQl/>
+      <CodeEditor/>
+   
    </section>
    </BlurFade>
     </>
