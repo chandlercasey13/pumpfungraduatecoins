@@ -28,7 +28,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/api/websocket/route.js",
-    "global.d.ts"
+    "src/global.d.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -61,11 +61,8 @@ export default function RootLayout({
     <html lang="en">
      
      <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
-     <script
-          type="module"
-          defer
-          src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/grid.js"
-        ></script>
+
+
      <header className="header">
         <div className="title-content-container"> 
         <DataStack  color={'#53A4FC'}/>

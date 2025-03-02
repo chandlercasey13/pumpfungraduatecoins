@@ -9,9 +9,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Chart from "../components/tvChart";
 import Spinner from "../components/ui/Spinner";
 
-import "ldrs/grid";
-import { grid } from "ldrs";
-import type {} from "ldrs";
+
+
+import 'ldrs/quantum'
+
+// Default values shown  
+
+
+
+
 
 import BlurFade from "@/components/ui/blur-fade";
 
@@ -30,7 +36,7 @@ export interface Coin {
   [key: string]: string | number | undefined;
 }
 
-grid.register();
+
 
 export default function OldComponent() {
   const [coins, setCoins] = useState<Coin[]>([]);
@@ -85,6 +91,7 @@ export default function OldComponent() {
           {coins.length === 0 ? (
             <li className="w-full h-[90vh] flex justify-center items-center">
               <div className=" flex justify-center items-center  w-40 h-40">
+                  {/* @ts-ignore */}
                 <l-grid size="150" speed="1.5" color="#53A4FC" />
               </div>
             </li>

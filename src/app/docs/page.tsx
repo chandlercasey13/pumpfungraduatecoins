@@ -46,9 +46,11 @@ return(
     mint: The contract address of the token you want to trade
 
       </p>
+    
       <CodeEditor/>
-   
+      
    </section>
+   
    </BlurFade>
     </>
 )

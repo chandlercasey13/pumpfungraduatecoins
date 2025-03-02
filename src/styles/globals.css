@@ -159,9 +159,21 @@ body {
   padding: 30px 35% 0px 60px;
 }
 
-.custom-scroll-container{
 
+.monaco-editor{
+  border-radius: 5px;
+  overflow: hidden;
+  border-color: #2a2a2c !important;
+  background-color: #2a2a2c !important;
+  padding: 10px;
+  z-index: 100;
 }
+
+
+
+
+
+
 
 .next-button {
   display: flex;
