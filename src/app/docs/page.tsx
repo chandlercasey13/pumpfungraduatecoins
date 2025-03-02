@@ -2,11 +2,9 @@
 
 import BlurFade from "@/components/ui/blur-fade"
 import CodeEditor from "@/components/CodeEditor"
-import { Code } from "lucide-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,

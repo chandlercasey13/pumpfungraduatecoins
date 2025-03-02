@@ -6,11 +6,13 @@
     "dev": "node server/server.mjs",
     "build": "next build",
     "start": "NODE_ENV=production node server/server.mjs",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.3",
     "@graphiql/react": "^0.28.2",
+    "@headlessui/react": "^1.7.19",
     "@metaplex-foundation/mpl-token-metadata": "^3.3.0",
     "@monaco-editor/react": "^4.7.0",
     "@radix-ui/react-avatar": "^1.1.2",
@@ -35,8 +37,8 @@
     "lucide-react": "^0.469.0",
     "motion": "^11.15.0",
     "next": "15.1.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-icons": "^5.4.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
@@ -48,11 +50,13 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.2",
+    "patch-package": "^8.0.0",
     "postcss": "^8",
+    "postinstall-postinstall": "^2.1.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

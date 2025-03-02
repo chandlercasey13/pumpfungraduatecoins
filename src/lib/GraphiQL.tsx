@@ -1,3 +1,7 @@
+"use client"
+
+
+
 /**
  *  Copyright (c) 2020 GraphQL Contributors.
  *
@@ -26,29 +30,22 @@ import React, {
   import {
     Button,
     ButtonGroup,
-    ChevronDownIcon,
-    ChevronUpIcon,
     CopyIcon,
     Dialog,
     ExecuteButton,
     GraphiQLProvider,
     GraphiQLProviderProps,
     HeaderEditor,
-    KeyboardShortcutIcon,
     MergeIcon,
-    PlusIcon,
     PrettifyIcon,
     QueryEditor,
-    ReloadIcon,
     ResponseEditor,
-    SettingsIcon,
     Spinner,
     Tab,
     Tabs,
     Theme,
     ToolbarButton,
     Tooltip,
-    UnStyledButton,
     useCopyQuery,
     useDragResize,
     useEditorContext,
@@ -416,47 +413,10 @@ import React, {
       [setTheme],
     );
   
-    const handleAddTab = editorContext.addTab;
-    const handleRefetchSchema = schemaContext.introspect;
+    
     const handleReorder = editorContext.moveTab;
   
-    const handleShowDialog: MouseEventHandler<HTMLButtonElement> = useCallback(
-      event => {
-        setShowDialog(
-          event.currentTarget.dataset.value as 'short-keys' | 'settings',
-        );
-      },
-      [],
-    );
-  
-    const handlePluginClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-      event => {
-        const context = pluginContext!;
-        const pluginIndex = Number(event.currentTarget.dataset.index!);
-        const plugin = context.plugins.find((_, index) => pluginIndex === index)!;
-        const isVisible = plugin === context.visiblePlugin;
-        if (isVisible) {
-          context.setVisiblePlugin(null);
-          pluginResize.setHiddenElement('first');
-        } else {
-          context.setVisiblePlugin(plugin);
-          pluginResize.setHiddenElement(null);
-        }
-      },
-      [pluginContext, pluginResize],
-    );
-  
-    const handleToolsTabClick: MouseEventHandler<HTMLButtonElement> = useCallback(
-      event => {
-        if (editorToolsResize.hiddenElement === 'second') {
-          editorToolsResize.setHiddenElement(null);
-        }
-        setActiveSecondaryEditor(
-          event.currentTarget.dataset.name as 'variables' | 'headers',
-        );
-      },
-      [editorToolsResize],
-    );
+   
   
     const toggleEditorTools: MouseEventHandler<HTMLButtonElement> =
       useCallback(() => {

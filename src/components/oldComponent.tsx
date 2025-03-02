@@ -11,10 +11,12 @@ import Spinner from "../components/ui/Spinner";
 
 
 
-import 'ldrs/quantum'
+
 
 // Default values shown  
 
+
+import { grid } from 'ldrs'
 
 
 
@@ -39,6 +41,12 @@ export interface Coin {
 
 
 export default function OldComponent() {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      grid.register();
+    }
+  }, []);
+
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinDevHoldings, setCoinDevHoldings] = useState(new Map());
   const [changedCoins, setChangedCoins] = useState<string[]>([]);
@@ -91,7 +99,6 @@ export default function OldComponent() {
           {coins.length === 0 ? (
             <li className="w-full h-[90vh] flex justify-center items-center">
               <div className=" flex justify-center items-center  w-40 h-40">
-                  {/* @ts-ignore */}
                 <l-grid size="150" speed="1.5" color="#53A4FC" />
               </div>
             </li>

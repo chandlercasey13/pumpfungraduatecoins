@@ -5,7 +5,6 @@ import OldComponent from "@/components/oldComponent";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,

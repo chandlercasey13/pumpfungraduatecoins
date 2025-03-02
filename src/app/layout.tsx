@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import DataStack from "../components/ui/dataStack"
 import Moon from "../components/ui/Moon"
-import Chevron from "@/components/ui/Chevron";
 import CollapsibleMenuItem from "@/components/ui/CollapsibleMenuItem";
-import { motion } from "framer-motion"; 
+
 
 
 

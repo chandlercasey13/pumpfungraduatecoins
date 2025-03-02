@@ -1,6 +1,6 @@
-
+"use client"
+import dynamic from "next/dynamic";
 import BlurFade from "@/components/ui/blur-fade"
-import GraphQl from"@/components/GraphiQLTester"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +12,7 @@ import {
 
 export default function Endpoint() {
 
+const GraphQL = dynamic(() => import("@/components/GraphiQLTester"), { ssr: false });
 
 
 return(
@@ -45,7 +46,7 @@ return(
     mint: The contract address of the token you want to trade
 
       </p>
-   <GraphQl/>
+   <GraphQL/>
    </section>
    </BlurFade>
     </>
