@@ -22,17 +22,17 @@ return(
    <Breadcrumb>
   <BreadcrumbList>
     <BreadcrumbItem>
-    Home    
+{"Home"}    
     </BreadcrumbItem>
     <BreadcrumbSeparator />
     <BreadcrumbItem>
-      <BreadcrumbItem>
-    Data Analytics   
-    </BreadcrumbItem>
+      
+    {"Data Analytics"}   
+  
     </BreadcrumbItem>
     <BreadcrumbSeparator />
     <BreadcrumbItem>
-      <BreadcrumbPage>Dashboard</BreadcrumbPage>
+      <BreadcrumbPage>{"Dashboard"}</BreadcrumbPage>
     </BreadcrumbItem>
   </BreadcrumbList>
 </Breadcrumb>

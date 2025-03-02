@@ -5,7 +5,7 @@ const Chevron = ({ color }: { color: string }) => {
       fill="none"
       stroke-width="2"
       viewBox="0 0 24 24"
-      stroke-linecap="round"
+      strokeLinecap="round"
       stroke-linejoin="round"
       height="20px"
       width="20px"

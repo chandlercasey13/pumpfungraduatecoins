@@ -22,9 +22,9 @@ export default function Dashboard() {
     </BreadcrumbItem>
     <BreadcrumbSeparator />
     <BreadcrumbItem>
-      <BreadcrumbItem>
+      
     Data Analytics   
-    </BreadcrumbItem>
+   
     </BreadcrumbItem>
     <BreadcrumbSeparator />
     <BreadcrumbItem>

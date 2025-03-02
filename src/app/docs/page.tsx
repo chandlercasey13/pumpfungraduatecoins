@@ -23,11 +23,11 @@ return(
     Home    
     </BreadcrumbItem>
     <BreadcrumbSeparator />
-    <BreadcrumbItem>
+    
       <BreadcrumbItem>
     Data Analytics   
     </BreadcrumbItem>
-    </BreadcrumbItem>
+  
     <BreadcrumbSeparator />
     <BreadcrumbItem>
       <BreadcrumbPage>Dashboard</BreadcrumbPage>
