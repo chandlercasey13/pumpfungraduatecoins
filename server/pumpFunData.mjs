@@ -22,7 +22,7 @@ export const sendCachedCoins = (socket) => {
 };
 
 export const aboutToGraduateCoins = async (socket, solSocket) => {
-  const url = "https://advanced-api-v2.pump.fun/coins/about-to-graduate";
+  const url = "https://advanced-api-v2.pump.fun/coins/list?sortBy=marketCap";
 
   try {
     const response = await fetch(url, {
@@ -38,9 +38,9 @@ export const aboutToGraduateCoins = async (socket, solSocket) => {
 
     const data = await response.json();
 
-    socket.emit("data", data);
+    socket.emit("data", data.coins);
 
-    await cacheCoins(data, socket, solSocket);
+    await cacheCoins(data.coins, socket, solSocket);
   } catch (error) {
     console.error("Error fetching coins:", error);
   }
@@ -129,8 +129,8 @@ const topTenHoldersSupply = async (coinMint) => {
     }
 
     const data = await response.json();
-
-    for (const coin of data) {
+    
+    for (const coin of data.coins) {
       if (coin.coinMint == coinMint) {
         let totalOwnedPercentage = 0;
         for (const holder of coin.holders.slice(0, 10)) {
@@ -207,7 +207,6 @@ const cacheCoins = async (data, socket) => {
           
 
           coinCache.set(coin.coinMint, coin);
-          console.log(coinCache)
 
           socket.emit("holdings", {
             coinMint: coin.coinMint,

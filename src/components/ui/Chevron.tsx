@@ -3,10 +3,10 @@ const Chevron = ({ color }: { color: string }) => {
     <svg
       stroke={color}
       fill="none"
-      stroke-width="2"
+      strokeWidth="2"
       viewBox="0 0 24 24"
       strokeLinecap="round"
-      stroke-linejoin="round"
+      strokeLinejoin="round"
       height="20px"
       width="20px"
       xmlns="http://www.w3.org/2000/svg"

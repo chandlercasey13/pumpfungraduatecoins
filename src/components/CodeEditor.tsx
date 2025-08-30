@@ -28,6 +28,7 @@ export default function CodeEditor() {
       getCoin(mintAddress: "2uFgHK1Zevr29CwfXwfo3eHBkxR73KpSv8D7eSpJpump") { 
         marketCap  
         lastReply
+        
       } 
     }
   \`;

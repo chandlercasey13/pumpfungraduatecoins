@@ -50,7 +50,7 @@ export default function RootLayout({
     {
       title: "Data API",
       subOptions: [
-        { label: "Getting Started", href: "/docs" },
+        // { label: "Getting Started", href: "/docs" },
         { label: "API Playground", href: "/endpoint" }
        
       ],
